@@ -16,7 +16,10 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
+/.settings
+/.project
+/.cproject
+/maptry1.psd
 # =========================
 # Operating System Files
 # =========================
