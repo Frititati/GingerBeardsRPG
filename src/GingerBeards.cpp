@@ -1,18 +1,15 @@
+#include "gingerbeards.h"
 #include "map.h"
 #include <windows.h>
 #include <iostream>
-#include <iostream>
 #include <fstream>
-#include <string>
 using namespace std;
 
 const char g_szClassName[] = "myWindowClass";
 HWND static area;
-//HFONT static hFont;
-
 Map* mapConstructor = new Map();
-
-//char mapInChar [400][400];
+GingerBeards* wtfamidoing = new GingerBeards();
+char textToBePrinted[1000000];
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
     switch(msg){
@@ -48,7 +45,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow){
     WNDCLASSEX wc;
-    HWND hwnd;
+    HWND window;
     MSG Msg;
 
     wc.cbSize        = sizeof(WNDCLASSEX);
@@ -70,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         return 0;
     }
 
-    hwnd = CreateWindowEx(
+    window = CreateWindowEx(
         WS_EX_CLIENTEDGE,
         g_szClassName,
         "ASCII RPG",
@@ -78,42 +75,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         0, 0, 650, 723,
         NULL, NULL, hInstance, NULL);
 
-    	HFONT hfReg = CreateFont(15, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0, TEXT("CONSOLAS"));
+	HFONT hfReg = CreateFont(15, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0, TEXT("CONSOLAS"));
+	SendMessage(area,WM_SETFONT,(WPARAM)hfReg,MAKELPARAM(FALSE,0));
 
-    	SendMessage(area,WM_SETFONT,(WPARAM)hfReg,MAKELPARAM(FALSE,0));
+	wtfamidoing->mapRefresh();
 
-    if(hwnd == NULL){
+    if(window == NULL){
         MessageBox(NULL, "Window Creation Failed!", "Error!",
             MB_ICONEXCLAMATION | MB_OK);
         return 0;
     }
 
-    ShowWindow(hwnd, nCmdShow);
-    UpdateWindow(hwnd);
-
-//////////////
-//        string line;
-//          ifstream myfile ("C:\\Users\\Filippo M Cardano\\Desktop\\trialmap.txt");
-//          if (myfile.is_open()){
-//        	  int a = 0;
-//        	  while( getline(myfile,line)){
-//        		  for(int i = 0; i < line.length(); i++){
-//        			  mapInChar[a][i] = line.at(i);
-//        		  }
-//        		  a++;
-//        	  }
-//        	myfile.close();
-//          } else{
-//        	  cout << "Unable to open file" << endl;
-//          }
-//          cout << mapInChar[4][2] <<endl;
-/////////
-
-    mapConstructor->mapInCharFunc();
-    char textToBePrinted[1000000];
-    mapConstructor->mapViewPoint(100,100,textToBePrinted);
-    SetWindowText(area, TEXT(textToBePrinted));
-    //cout << textToBePrinted << endl;
+    ShowWindow(window, nCmdShow);
+    UpdateWindow(window);
 
     while(GetMessage(&Msg, NULL, 0, 0) > 0){
         TranslateMessage(&Msg);
@@ -121,4 +95,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     }
 
     return Msg.wParam;
+}
+
+//void GingerBeards::mapCreator(){
+//	thread test(mapRefresh);
+//	test.join();
+//}
+
+void GingerBeards::mapRefresh(){
+	while(true){
+		mapConstructor->mapInCharFunc();
+		mapConstructor->mapViewPoint(200,100,textToBePrinted);
+		SetWindowText(area, TEXT(textToBePrinted));
+	}
 }
