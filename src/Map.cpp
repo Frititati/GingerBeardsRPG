@@ -60,33 +60,34 @@ void Map::getVarOfMap(char* strInChar){
 	}
 }
 void Map::mapViewPoint(int x, int y, char* strInChar){
-	int yincrease = 15, xincrease = 30;		// x is rows
-	mapInCharFunc();						// z is columns
+	int yincrease = 15, xincrease = 30;		// x is rows, y is columns
+	mapInCharFunc();
 
 	signed int charAt = 0;
-	signed int i = (y - yincrease);
-	signed int iblock = (yincrease*2) + y;
-	signed int iiblock = (xincrease*2) + x;
-	while(i < iblock){
-		signed int ii = (x - xincrease);
-		while(ii < iiblock){
-			if(i < 0 || ii < 0 ){
+	signed int yi = (y - yincrease);
+	signed int yblock = yincrease + y;
+	signed int xblock = xincrease + x;
+	while(yi < yblock){
+		signed int xi = (x - xincrease);
+		while(xi < xblock){
+			if(yi < 0 || xi < 0 ){
 				strInChar[charAt] = '-';
 			}else {
-				strInChar[charAt] = mapInChar[i][ii];
+				strInChar[charAt] = mapInChar[yi][xi];
 			}
-			if(i == y && ii == (x+1)){
+			if(yi == y && xi == (x+1)){
 				strInChar[charAt - 2] = '¶';
 				strInChar[charAt - 1] = '¶';
 				strInChar[charAt] = '¶';
 			}
 			charAt++;
-			ii++;
+			xi++;
 		}
 		strInChar[charAt] = '\n';
 		charAt++;
-		i++;
+		yi++;
 	}
+	strInChar[x + xincrease] = 'X';
 //	for(int i = (y-yincrease); i<((yincrease*2) + y); i++){
 //		for(int ii = (x - xincrease); ii<((xincrease*2) + x); ii++){
 //			if(i < 0 || ii < 0){
