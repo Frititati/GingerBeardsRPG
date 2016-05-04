@@ -10,7 +10,7 @@
 #include <string.h>
 using namespace std;
 
-const int rows = 20, columns= 61;
+const int rows = 20, columns= 131;
 
 char mapInChar [rows][columns];
 
@@ -60,8 +60,8 @@ void Map::mapViewPoint(int x, int y, char* strInChar){
 		while(ii < iiblock){
 			if(i < 0 || ii < 0 ){
 				strInChar[charAt] = '-';
-			}else if(empty == mapInChar[i][ii] ){
-				strInChar[charAt] = '-';
+//			}else if(empty == mapInChar[i][ii] ){
+//				strInChar[charAt] = '-';
 			}else {
 				strInChar[charAt] = mapInChar[i][ii];
 			}
