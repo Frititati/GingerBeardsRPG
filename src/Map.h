@@ -12,8 +12,10 @@
 class Map{
 public:
 	void mapInCharFunc();
+	void borderInCharFunc();
 	void getVarOfMap(char* stringMap);
-	void mapViewPoint(int x, int z, char* strInChar);
+	void mapViewPoint(int x, int y, char* strInChar);
+	bool testBorder(int x, int y);
 };
 
 

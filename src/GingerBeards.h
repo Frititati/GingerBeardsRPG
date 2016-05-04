@@ -10,7 +10,8 @@
 
 class GingerBeards{
 public:
-	void mapRefresh();
+	void mapRefresh(int, int);
+	void moveTest(int);
 };
 
 
