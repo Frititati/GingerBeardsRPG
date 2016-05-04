@@ -99,6 +99,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 void GingerBeards::mapRefresh(){
 	mapConstructor->mapInCharFunc();
-	mapConstructor->mapViewPoint(0,0,textToBePrinted);
+	mapConstructor->mapViewPoint(15,0,textToBePrinted);
 	SetWindowText(area, TEXT(textToBePrinted));
 }

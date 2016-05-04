@@ -43,47 +43,47 @@ void Map::getVarOfMap(char* strInChar){
 		chatAt++;
 	}
 }
-void Map::mapViewPoint(int y, int x, char* strInChar){
+void Map::mapViewPoint(int x, int y, char* strInChar){
 	int yincrease = 15, xincrease = 30;		// x is rows
 	mapInCharFunc();						// z is columns
 
 	signed int charAt = 0;
-//	signed int i = (y - yincrease);
-//	signed int iblock = (yincrease*2) + y;
+	signed int i = (y - yincrease);
+	signed int iblock = (yincrease*2) + y;
 //	if(iblock < 30){
 //
 //	}
-//	signed int iiblock = (xincrease*2) + x;
-//	char empty = ' ';
-//	while(i < iblock){
-//		signed int ii = (x - xincrease);
-//		while(ii < iiblock){
-//			if(i < 0 || ii < 0 ){
-//				strInChar[charAt] = '-';
-//			}else if(empty == mapInChar[i][ii] ){
-//				strInChar[charAt] = '-';
-//			}else {
-//				strInChar[charAt] = mapInChar[i][ii];
-//			}
-//			charAt++;
-//			ii++;
-//		}
-//		strInChar[charAt] = '\n';
-//		charAt++;
-//		i++;
-//	}
-
-
-	for(int i = (y-yincrease); i<((yincrease*2) + y); i++){
-		for(int ii = (x - xincrease); ii<((xincrease*2) + x); ii++){
-			if(i < 0 || ii < 0){
+	signed int iiblock = (xincrease*2) + x;
+	char empty = ' ';
+	while(i < iblock){
+		signed int ii = (x - xincrease);
+		while(ii < iiblock){
+			if(i < 0 || ii < 0 ){
 				strInChar[charAt] = '-';
-			}else{
+			}else if(empty == mapInChar[i][ii] ){
+				strInChar[charAt] = '-';
+			}else {
 				strInChar[charAt] = mapInChar[i][ii];
 			}
 			charAt++;
+			ii++;
 		}
 		strInChar[charAt] = '\n';
 		charAt++;
+		i++;
 	}
+
+
+//	for(int i = (y-yincrease); i<((yincrease*2) + y); i++){
+//		for(int ii = (x - xincrease); ii<((xincrease*2) + x); ii++){
+//			if(i < 0 || ii < 0){
+//				strInChar[charAt] = '-';
+//			}else{
+//				strInChar[charAt] = mapInChar[i][ii];
+//			}
+//			charAt++;
+//		}
+//		strInChar[charAt] = '\n';
+//		charAt++;
+//	}
 }
