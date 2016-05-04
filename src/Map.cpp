@@ -10,7 +10,7 @@
 #include <string.h>
 using namespace std;
 
-const int rows = 20, columns= 131;
+const int rows = 20, columns= 60;
 
 char mapInChar [rows][columns];
 char borderInChar [rows][columns];
@@ -60,7 +60,7 @@ void Map::getVarOfMap(char* strInChar){
 	}
 }
 void Map::mapViewPoint(int x, int y, char* strInChar){
-	int yincrease = 15, xincrease = 30;		// x is rows, y is columns
+	int yincrease = 20, xincrease = 40;		// x is rows, y is columns
 	mapInCharFunc();
 
 	signed int charAt = 0;
@@ -70,9 +70,9 @@ void Map::mapViewPoint(int x, int y, char* strInChar){
 	while(yi < yblock){
 		signed int xi = (x - xincrease);
 		while(xi < xblock){
-			if(yi < 0 || xi < 0 ){
+			if(yi < 0 || xi < 0 || yi >= rows || xi >= columns){
 				strInChar[charAt] = '-';
-			}else {
+			} else {
 				strInChar[charAt] = mapInChar[yi][xi];
 			}
 			if(yi == y && xi == (x+1)){
@@ -87,7 +87,6 @@ void Map::mapViewPoint(int x, int y, char* strInChar){
 		charAt++;
 		yi++;
 	}
-	strInChar[x + xincrease] = 'X';
 //	for(int i = (y-yincrease); i<((yincrease*2) + y); i++){
 //		for(int ii = (x - xincrease); ii<((xincrease*2) + x); ii++){
 //			if(i < 0 || ii < 0){
