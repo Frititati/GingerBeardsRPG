@@ -97,15 +97,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return Msg.wParam;
 }
 
-//void GingerBeards::mapCreator(){
-//	thread test(mapRefresh);
-//	test.join();
-//}
-
 void GingerBeards::mapRefresh(){
-	while(true){
-		mapConstructor->mapInCharFunc();
-		mapConstructor->mapViewPoint(200,100,textToBePrinted);
-		SetWindowText(area, TEXT(textToBePrinted));
-	}
+	mapConstructor->mapInCharFunc();
+	mapConstructor->mapViewPoint(0,0,textToBePrinted);
+	SetWindowText(area, TEXT(textToBePrinted));
 }

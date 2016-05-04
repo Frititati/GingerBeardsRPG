@@ -10,7 +10,6 @@
 
 class GingerBeards{
 public:
-	//void mapCreator();
 	void mapRefresh();
 };
 
