@@ -13,8 +13,11 @@
 
 class Player {
 public:
-	Player();
-	int playerMovement(int, Map, HWND);
+	void playerMovement(int, Map*&, HWND&);
+	void playerPossition(int*, int*);
+private:
+	int xpossition = 3;
+	int ypossition = 3;
 };
 
 #endif /* PLAYER_H_ */

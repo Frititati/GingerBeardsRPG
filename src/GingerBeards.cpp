@@ -1,6 +1,7 @@
 #include "gingerbeards.h"
 #include "map.h"
 #include "player.h"
+#include "mob.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
@@ -11,13 +12,14 @@ HWND area;
 Map* mapConstructor = new Map();
 GingerBeards* tempgingerbeards = new GingerBeards();
 Player* firstPlayer = new Player();
+Mob* oneMob = new Mob();
 char textToBePrinted[1000];
-int xpossitionnow;
-int ypossitionnow;
-int x2possition = 5;
-char playerLook2 [5];
+//int xpossitionnow;
+//int ypossitionnow;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
+	Map*& refMap = mapConstructor;
+	HWND& refArea = area;
     switch(msg){
     	case WM_CREATE:
     		area = CreateWindow("static", "broken",
@@ -27,19 +29,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
 			);
     	break;
     	case WM_KEYDOWN:
-    		HWND& testarea = area;
-    		Map* fuckthisshit = mapConstructor;
+    		mapConstructor->refreshEditLayer();	//this is run everytime we call the a key
     		if(wParam == VK_LEFT){
-    			firstPlayer->playerMovement(1, fuckthisshit, testarea);
+    			oneMob->mobMovement(refMap, firstPlayer);
+    			firstPlayer->playerMovement(1, refMap, refArea);
     		}
     		if(wParam == VK_RIGHT){
-    			firstPlayer->playerMovement(2, mapConstructor, area);
+    			oneMob->mobMovement(refMap, firstPlayer);
+    			firstPlayer->playerMovement(2, refMap, refArea);
     		}
     		if(wParam == VK_UP){
-    			firstPlayer->playerMovement(3, mapConstructor, area);
+    			oneMob->mobMovement(refMap, firstPlayer);
+    			firstPlayer->playerMovement(3, refMap, refArea);
 			}
 			if(wParam == VK_DOWN){
-				firstPlayer->playerMovement(4, mapConstructor, area);
+    			oneMob->mobMovement(refMap, firstPlayer);
+				firstPlayer->playerMovement(4, refMap, refArea);
+			}
+			if(wParam == VK_F1){
+				oneMob->mobMovement(refMap, firstPlayer);
+				firstPlayer->playerMovement(5, refMap, refArea);
 			}
 		break;
 
@@ -93,8 +102,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SendMessage(area,WM_SETFONT,(WPARAM)hfReg,MAKELPARAM(FALSE,0));
 
 
-	xpossitionnow = 3;
-	ypossitionnow = 3;
+	int xpossitionnow = 3;
+	int ypossitionnow = 3;
 	tempgingerbeards->mapFirstRefresh(xpossitionnow, ypossitionnow);
 
     if(window == NULL){
@@ -117,7 +126,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 void GingerBeards::mapFirstRefresh(int x, int y){
 	mapConstructor->mapInstantiation();
 	mapConstructor->borderInstantion();
-	mapConstructor->drawCharacter(x,y,playerLook2);
 	mapConstructor->mapViewPoint(x,y,textToBePrinted);
 	SetWindowText(area, TEXT(textToBePrinted));
 }

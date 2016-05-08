@@ -8,39 +8,47 @@
 #include "Player.h"
 #include "GingerBeards.h"
 #include <windows.h>
+#include <iostream>
+using namespace std;
 
 char playerLook [5];
-int xpossitionnow = 3;
-int ypossitionnow = 3;
 char toBePrinted[1000];
 
-int Player::playerMovement(int keypressed, Map mapEditor, HWND areaEdit ){
-	int tempx = xpossitionnow;
-	int tempy = ypossitionnow;
+void Player::playerMovement(int keypressed, Map*& mapEditor, HWND& textArea){
+	playerLook[0] = '(';
+	playerLook[1] = '"';
+	playerLook[2] = '-';
+	playerLook[3] = '"';
+	playerLook[4] = ')';
+	int tempx = xpossition;
+	int tempy = ypossition;
 	switch(keypressed){
 	case 1:
-		xpossitionnow--;
+		xpossition--;
 	break;
 	case 2:
-		xpossitionnow++;
+		xpossition++;
 	break;
 	case 3:
-		ypossitionnow--;
+		ypossition--;
 	break;
 	case 4:
-		ypossitionnow++;
+		ypossition++;
+	break;
+	case 5:
 	break;
 	}
-	if(mapEditor.testBorder(xpossitionnow, ypossitionnow)){
-		mapEditor.refreshEditLayer();
-		mapEditor.drawCharacter(xpossitionnow, ypossitionnow,playerLook);
-		//mapEditor->drawCharacter(x2possition, ypossitionnow, playerLook);
-		mapEditor.mapViewPoint(xpossitionnow,ypossitionnow,toBePrinted);
-		SetWindowText(areaEdit, TEXT(toBePrinted));
+	if(mapEditor->testBorder(xpossition, ypossition)){
+		mapEditor->drawCharacter(xpossition, ypossition,playerLook);
+		mapEditor->mapViewPoint(xpossition,ypossition,toBePrinted);
+		SetWindowText(textArea, TEXT(toBePrinted));
 	}else{
-		xpossitionnow = tempx;
-		ypossitionnow = tempy;
+		xpossition = tempx;
+		ypossition = tempy;
 	}
-	return 1;
+}
+void Player::playerPossition(int* x, int* y){
+	*x = xpossition;
+	*y = ypossition;
 }
 
