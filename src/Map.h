@@ -13,9 +13,13 @@ class Map{
 public:
 	void mapInCharFunc();
 	void borderInCharFunc();
-	void getVarOfMap(char* stringMap);
+	//void getVarOfMap(char* stringMap);
 	void mapViewPoint(int x, int y, char* strInChar);
 	bool testBorder(int x, int y);
+	void mapInstantiation();
+	void borderInstantion();
+	void drawCharacter(int, int, char*);
+	void refreshEditLayer();
 };
 
 

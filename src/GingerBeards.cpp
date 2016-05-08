@@ -1,40 +1,45 @@
 #include "gingerbeards.h"
 #include "map.h"
+#include "player.h"
 #include <windows.h>
 #include <iostream>
 #include <fstream>
 using namespace std;
 
 const char g_szClassName[] = "myWindowClass";
-HWND static area;
+HWND area;
 Map* mapConstructor = new Map();
 GingerBeards* tempgingerbeards = new GingerBeards();
-char textToBePrinted[1000000];
+Player* firstPlayer = new Player();
+char textToBePrinted[1000];
 int xpossitionnow;
 int ypossitionnow;
+int x2possition = 5;
+char playerLook2 [5];
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
     switch(msg){
     	case WM_CREATE:
     		area = CreateWindow("static", "broken",
     			WS_VISIBLE| WS_CHILD ,
-    			0 , 0 , 630 , 680,
+    			0 , 0 , 300 , 320,
     			hwnd, (HMENU) 1, NULL, NULL
 			);
     	break;
-
     	case WM_KEYDOWN:
+    		HWND& testarea = area;
+    		Map* fuckthisshit = mapConstructor;
     		if(wParam == VK_LEFT){
-    			tempgingerbeards->moveTest(1);
+    			firstPlayer->playerMovement(1, fuckthisshit, testarea);
     		}
     		if(wParam == VK_RIGHT){
-    			tempgingerbeards->moveTest(2);
+    			firstPlayer->playerMovement(2, mapConstructor, area);
     		}
     		if(wParam == VK_UP){
-				tempgingerbeards->moveTest(3);
+    			firstPlayer->playerMovement(3, mapConstructor, area);
 			}
 			if(wParam == VK_DOWN){
-				tempgingerbeards->moveTest(4);
+				firstPlayer->playerMovement(4, mapConstructor, area);
 			}
 		break;
 
@@ -81,7 +86,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_szClassName,
         "ASCII RPG",
         WS_OVERLAPPEDWINDOW,
-        0, 0, 650, 723,
+        50, 100, 350, 370,
         NULL, NULL, hInstance, NULL);
 
 	HFONT hfReg = CreateFont(15, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0, TEXT("CONSOLAS"));
@@ -90,7 +95,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	xpossitionnow = 3;
 	ypossitionnow = 3;
-	tempgingerbeards->mapRefresh(xpossitionnow, ypossitionnow);
+	tempgingerbeards->mapFirstRefresh(xpossitionnow, ypossitionnow);
 
     if(window == NULL){
         MessageBox(NULL, "Window Creation Failed!", "Error!",
@@ -109,34 +114,43 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return Msg.wParam;
 }
 
-void GingerBeards::mapRefresh(int x, int y){
-	mapConstructor->mapInCharFunc();
+void GingerBeards::mapFirstRefresh(int x, int y){
+	mapConstructor->mapInstantiation();
+	mapConstructor->borderInstantion();
+	mapConstructor->drawCharacter(x,y,playerLook2);
 	mapConstructor->mapViewPoint(x,y,textToBePrinted);
 	SetWindowText(area, TEXT(textToBePrinted));
 }
-void GingerBeards::moveTest(int keypressed){
-	int tempx = xpossitionnow;
-	int tempy = ypossitionnow;
-	switch(keypressed){
-	case 1:
-		xpossitionnow--;
-	break;
-	case 2:
-		xpossitionnow++;
-	break;
-	case 3:
-		ypossitionnow--;
-	break;
-	case 4:
-		ypossitionnow++;
-	break;
-	}
-	if(mapConstructor->testBorder(xpossitionnow, ypossitionnow)){
-		mapConstructor->mapViewPoint(xpossitionnow,ypossitionnow,textToBePrinted);
-		SetWindowText(area, TEXT(textToBePrinted));
-	}else{
-		xpossitionnow = tempx;
-		ypossitionnow = tempy;
-	}
-
-}
+//void GingerBeards::playerMovement(int keypressed){
+//	playerLook[0] = '(';
+//	playerLook[1] = '"';
+//	playerLook[2] = '-';
+//	playerLook[3] = '"';
+//	playerLook[4] = ')';
+//	int tempx = xpossitionnow;
+//	int tempy = ypossitionnow;
+//	switch(keypressed){
+//	case 1:
+//		xpossitionnow--;
+//	break;
+//	case 2:
+//		xpossitionnow++;
+//	break;
+//	case 3:
+//		ypossitionnow--;
+//	break;
+//	case 4:
+//		ypossitionnow++;
+//	break;
+//	}
+//	if(mapConstructor->testBorder(xpossitionnow, ypossitionnow)){
+//		mapConstructor->refreshEditLayer();
+//		mapConstructor->drawCharacter(xpossitionnow, ypossitionnow,playerLook);
+//		mapConstructor->drawCharacter(x2possition, ypossitionnow, playerLook);
+//		mapConstructor->mapViewPoint(xpossitionnow,ypossitionnow,textToBePrinted);
+//		SetWindowText(area, TEXT(textToBePrinted));
+//	}else{
+//		xpossitionnow = tempx;
+//		ypossitionnow = tempy;
+//	}
+//}

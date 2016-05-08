@@ -6,36 +6,41 @@
  */
 
 #include "Player.h"
+#include "GingerBeards.h"
+#include <windows.h>
 
-Player::Player(int startx, int starty, char portrait[]) {
-	x = startx;
-	y = starty;
-	xSpeed = 4;
-	ySpeed = 4;
-//	this->portrait = portrait;
-}
+char playerLook [5];
+int xpossitionnow = 3;
+int ypossitionnow = 3;
+char toBePrinted[1000];
 
-bool Player::moveRight() {
-	x += xSpeed;
-	return true;
-}
-
-bool Player::moveLeft() {
-	x -= xSpeed;
-	return true;
-}
-
-bool Player::moveUp() {
-	y -= ySpeed;
-	return true;
-}
-
-bool Player::moveDown() {
-	y += ySpeed;
-	return true;
-}
-
-Player::~Player() {
-	delete portrait;
+int Player::playerMovement(int keypressed, Map mapEditor, HWND areaEdit ){
+	int tempx = xpossitionnow;
+	int tempy = ypossitionnow;
+	switch(keypressed){
+	case 1:
+		xpossitionnow--;
+	break;
+	case 2:
+		xpossitionnow++;
+	break;
+	case 3:
+		ypossitionnow--;
+	break;
+	case 4:
+		ypossitionnow++;
+	break;
+	}
+	if(mapEditor.testBorder(xpossitionnow, ypossitionnow)){
+		mapEditor.refreshEditLayer();
+		mapEditor.drawCharacter(xpossitionnow, ypossitionnow,playerLook);
+		//mapEditor->drawCharacter(x2possition, ypossitionnow, playerLook);
+		mapEditor.mapViewPoint(xpossitionnow,ypossitionnow,toBePrinted);
+		SetWindowText(areaEdit, TEXT(toBePrinted));
+	}else{
+		xpossitionnow = tempx;
+		ypossitionnow = tempy;
+	}
+	return 1;
 }
 

@@ -7,23 +7,14 @@
 
 #ifndef PLAYER_H_
 #define PLAYER_H_
+#include "map.h"
+#include "windows.h"
+
 
 class Player {
-private:
-	int x, y;
-	int xSpeed, ySpeed;
-	char portrait[];
 public:
-	Player(int, int, char[]);
-
-	/*
-	 * True if the player moved (false if the player position
-	 */
-	bool moveLeft();
-	bool moveRight();
-	bool moveUp();
-	bool moveDown();
-	virtual ~Player();
+	Player();
+	int playerMovement(int, Map, HWND);
 };
 
 #endif /* PLAYER_H_ */
