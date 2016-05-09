@@ -1,31 +1,38 @@
 #include "gingerbeards.h"
-#include "map.h"
 #include "player.h"
 #include "mob.h"
-#include <windows.h>
 #include <iostream>
 #include <fstream>
 using namespace std;
 
 const char g_szClassName[] = "myWindowClass";
-HWND area;
+//HWND area;
 Map* mapConstructor = new Map();
 GingerBeards* tempgingerbeards = new GingerBeards();
 Player* firstPlayer = new Player();
 Mob* oneMob = new Mob();
-char textToBePrinted[10000]; //4*xincrease*yincrease
-//int xpossitionnow;
-//int ypossitionnow;
+
+char textToBePrinted[LENGTH];
+
+long lfHeight = tempgingerbeards->computeFontHeight();
+
+// get the height of the font based on device units
+long GingerBeards::computeFontHeight() {
+	HDC hdc = GetDC(NULL);
+	long result = -MulDiv(FONT_SIZE, GetDeviceCaps(hdc, LOGPIXELSY), 72);
+	ReleaseDC(NULL, hdc);
+	return result;
+}
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
-	case WM_CREATE:
-		area = CreateWindow("static", "broken",
-				WS_VISIBLE| WS_CHILD | ES_READONLY,
-				0 , 0 , 700 , 700,
-				hwnd, (HMENU) 1, NULL, NULL
-		);
-		break;
+//	case WM_CREATE:
+//		area = CreateWindow("static", NULL,
+//				WS_VISIBLE| WS_CHILD,
+//				0 , 0 , 700 , 700,
+//				hwnd, (HMENU) 1, NULL, NULL
+//		);
+//		break;
 //    	case WM_KEYDOWN:
 //    		mapConstructor->refreshEditLayer();	//this is run everytime we call the a key
 //    		if(wParam == VK_LEFT){
@@ -94,24 +101,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	WS_OVERLAPPEDWINDOW, 50, 100, 1000, 1000,
 	NULL, NULL, hInstance, NULL);
 
-	HFONT hfReg = CreateFont(15, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,TEXT("CONSOLAS"));
-	SendMessage(area, WM_SETFONT, (WPARAM) hfReg, MAKELPARAM(FALSE, 0));
-
-	int xpossitionnow = 3;
-	int ypossitionnow = 3;
-	tempgingerbeards->mapFirstRefresh(xpossitionnow, ypossitionnow);
-
 	if (window == NULL) {
 		MessageBox(NULL, "Window Creation Failed!", "Error!",
 		MB_ICONEXCLAMATION | MB_OK);
 		return 0;
 	}
 
+	int xpossitionnow = 3;
+	int ypossitionnow = 3;
+	tempgingerbeards->mapFirstRefresh(xpossitionnow, ypossitionnow);
+
 	ShowWindow(window, nCmdShow);
 	UpdateWindow(window);
 
 	Map*& refMap = mapConstructor;
-	while (1){  // LOOP FOREVER
+	while (1) {  // LOOP FOREVER
 		if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
 			if (Msg.message == WM_QUIT) {
 				break;  // BREAK OUT OF INFINITE LOOP
@@ -119,51 +123,58 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				TranslateMessage(&Msg);   // translates
 				DispatchMessage(&Msg);    // this line RESULTS IN
 			}
-		}else{
+		} else {
 			mapConstructor->refreshEditLayer();
 			oneMob->mobMovement(refMap, firstPlayer);
 			tempgingerbeards->checkForInput();
 			int xplay, yplay;
 			firstPlayer->playerPossition(&xplay, &yplay);
-			mapConstructor->mapViewPoint(xplay,yplay,textToBePrinted);
-			SetWindowText(area, TEXT(textToBePrinted));
+			mapConstructor->mapViewPoint(xplay, yplay, textToBePrinted);
+			tempgingerbeards->draw(window);
 		}
-		Sleep(16);
+		Sleep(32);
+
 	}
 
 	return Msg.wParam;
 }
 
+void GingerBeards::draw(HWND window) {
+	RECT rect;
+	HDC wdc = GetDC(window);
+	GetClientRect(window, &rect);
+	SetTextColor(wdc, 0x00000000);
+	rect.left = 40;
+	rect.top = 10;
+	// font size based on device units
+	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0,
+				"Consolas");
+	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
+	DrawText(wdc, textToBePrinted, LENGTH, &rect,
+	DT_NOCLIP);
+	SelectObject(wdc, oldFont);
+	DeleteObject (hf);
+	ReleaseDC(window, wdc);
+}
+
 void GingerBeards::checkForInput() {
 	Map*& refMap = mapConstructor;
-	HWND& refArea = area;
 	if (GetAsyncKeyState( VK_UP)) {
-		//oneMob->mobMovement(refMap, firstPlayer);
-		firstPlayer->playerMovement(3, refMap, refArea);
+		firstPlayer->playerMovement(3, refMap);
+	} else if (GetAsyncKeyState( VK_DOWN)) {
+		firstPlayer->playerMovement(4, refMap);
+	} else if (GetAsyncKeyState( VK_RIGHT)) {
+		firstPlayer->playerMovement(2, refMap);
+	} else if (GetAsyncKeyState( VK_LEFT)) {
+		firstPlayer->playerMovement(1, refMap);
+	} else {
+		firstPlayer->playerMovement(5, refMap);
 	}
-
-	if (GetAsyncKeyState( VK_DOWN)) {
-		//oneMob->mobMovement(refMap, firstPlayer);
-		firstPlayer->playerMovement(4, refMap, refArea);
-	}
-
-	if (GetAsyncKeyState( VK_RIGHT)) {
-		firstPlayer->playerMovement(2, refMap, refArea);
-	}
-
-	if (GetAsyncKeyState( VK_LEFT)) {
-		firstPlayer->playerMovement(1, refMap, refArea);
-		//oneMob->mobMovement(refMap, firstPlayer);
-	}
-	firstPlayer->playerMovement(5, refMap, refArea);
-	//oneMob->mobMovement(refMap, firstPlayer);
 }
 
 void GingerBeards::mapFirstRefresh(int x, int y) {
 	mapConstructor->mapInstantiation();
 	mapConstructor->borderInstantion();
-	mapConstructor->mapViewPoint(x, y, textToBePrinted);
-	SetWindowText(area, TEXT(textToBePrinted));
 }
 //void GingerBeards::playerMovement(int keypressed){
 //	playerLook[0] = '(';

@@ -13,7 +13,7 @@
 
 class Player {
 public:
-	void playerMovement(int, Map*&, HWND&);
+	void playerMovement(int, Map*&);
 	void playerPossition(int*, int*);
 private:
 	int xpossition = 3;

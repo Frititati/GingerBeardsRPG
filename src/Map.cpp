@@ -4,11 +4,11 @@
 #include <string.h>
 using namespace std;
 
-const int rows = 40, columns= 60;
 
-char mapInChar [rows][columns];
-char mapInCharEditable [rows][columns];
-char borderInChar [rows][columns];
+
+char mapInChar [ROWS][COLUMNS];
+char mapInCharEditable [ROWS][COLUMNS];
+char borderInChar [ROWS][COLUMNS];
 
 void Map::mapInCharFunc(){
 	string line;
@@ -56,19 +56,18 @@ void Map::borderInCharFunc(){
 //}
 void Map::mapInstantiation(){
 	mapInCharFunc();
-	std::copy(&mapInChar[0][0], &mapInChar[0][0]+rows*columns,&mapInCharEditable[0][0]);
+	std::copy(&mapInChar[0][0], &mapInChar[0][0]+ROWS*COLUMNS,&mapInCharEditable[0][0]);
 }
 void Map::mapViewPoint(int x, int y, char* strInChar){
-	int yincrease = 10, xincrease = 20;		// x is rows, y is columns
 
 	signed int charAt = 0;
-	signed int yi = (y - yincrease);
-	signed int yblock = yincrease + y;
-	signed int xblock = xincrease + x;
+	signed int yi = y - YINCREASE;
+	signed int yblock = YINCREASE + y;
+	signed int xblock = XINCREASE + x;
 	while(yi < yblock){
-		signed int xi = (x - xincrease);
+		signed int xi = x - XINCREASE;
 		while(xi < xblock){
-			if(yi < 0 || xi < 0 || yi >= rows || xi >= columns){
+			if(yi < 0 || xi < 0 || yi >= ROWS || xi >= COLUMNS){
 				strInChar[charAt] = '-';
 			} else {
 				strInChar[charAt] = mapInCharEditable[yi][xi];
@@ -101,7 +100,7 @@ bool Map::testBorder(int x, int y, int size){
 	return true;
 }
 void Map::refreshEditLayer(){
-	std::copy(&mapInChar[0][0], &mapInChar[0][0]+rows*columns,&mapInCharEditable[0][0]);
+	std::copy(&mapInChar[0][0], &mapInChar[0][0]+ROWS*COLUMNS,&mapInCharEditable[0][0]);
 }
 void Map::drawCharacter(int x, int y, char* drawPoints){
 	signed int lenght = strlen(drawPoints);

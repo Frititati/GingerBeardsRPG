@@ -9,6 +9,9 @@
 #define MAP_H_
 #include <string.h>
 
+const int XINCREASE = 45, YINCREASE = 15;
+const int ROWS = 40, COLUMNS= 60;
+
 class Map{
 public:
 	void mapInCharFunc();

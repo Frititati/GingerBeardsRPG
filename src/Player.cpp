@@ -7,7 +7,7 @@ using namespace std;
 char playerLook [5];
 char toBePrinted[500000];
 
-void Player::playerMovement(int keypressed, Map*& mapEditor, HWND& textArea){
+void Player::playerMovement(int keypressed, Map*& mapEditor){
 	playerLook[0] = '(';
 	playerLook[1] = '"';
 	playerLook[2] = '-';
