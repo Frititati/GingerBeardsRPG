@@ -18,6 +18,9 @@ private:
 	int ypossition = 35;
 	int oldx;
 	int oldy;
+	int speedCount;
+	int speed = 1;
+	int viewDistance = 100; // sqrt(10)
 };
 
 #endif /* SRC_MOB_H_ */
