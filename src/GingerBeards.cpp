@@ -13,11 +13,10 @@ Map* mapConstructor = new Map();
 GingerBeards* tempgingerbeards = new GingerBeards();
 Player* firstPlayer = new Player();
 Mob* oneMob = new Mob();
-char textToBePrinted[1000];
+char textToBePrinted[10000]; //4*xincrease*yincrease
 //int xpossitionnow;
 //int ypossitionnow;
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
 	Map*& refMap = mapConstructor;
 	HWND& refArea = area;
     switch(msg){
@@ -52,65 +51,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam){
 			}
 		break;
 
-        case WM_CLOSE:
-            DestroyWindow(hwnd);
-        break;
 
-        case WM_DESTROY:
-            PostQuitMessage(0);
-        break;
-
-        default:
-            return DefWindowProc(hwnd, msg, wParam, lParam);
-    }
-    return 0;
 }
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow){
-    WNDCLASSEX wc;
-    HWND window;
-    MSG Msg;
-
-    wc.cbSize        = sizeof(WNDCLASSEX);
-    wc.style         = 0;
-    wc.lpfnWndProc   = WndProc;
-    wc.cbClsExtra    = 0;
-    wc.cbWndExtra    = 0;
-    wc.hInstance     = hInstance;
-    wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
-    wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
-    wc.lpszMenuName  = NULL;
-    wc.lpszClassName = g_szClassName;
-    wc.hIconSm       = LoadIcon(NULL, IDI_APPLICATION);
-
-    if(!RegisterClassEx(&wc)){
-        MessageBox(NULL, "Window Registration Failed!", "Error!",
-            MB_ICONEXCLAMATION | MB_OK);
-        return 0;
-    }
-
-    window = CreateWindowEx(
-        WS_EX_CLIENTEDGE,
-        g_szClassName,
-        "ASCII RPG",
-        WS_OVERLAPPEDWINDOW,
-        50, 100, 350, 370,
-        NULL, NULL, hInstance, NULL);
-
-	HFONT hfReg = CreateFont(15, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0, TEXT("CONSOLAS"));
-	SendMessage(area,WM_SETFONT,(WPARAM)hfReg,MAKELPARAM(FALSE,0));
 
 
 	int xpossitionnow = 3;
 	int ypossitionnow = 3;
 	tempgingerbeards->mapFirstRefresh(xpossitionnow, ypossitionnow);
 
-    if(window == NULL){
-        MessageBox(NULL, "Window Creation Failed!", "Error!",
-            MB_ICONEXCLAMATION | MB_OK);
-        return 0;
-    }
 
     ShowWindow(window, nCmdShow);
     UpdateWindow(window);
@@ -123,10 +71,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     return Msg.wParam;
 }
 
-void GingerBeards::mapFirstRefresh(int x, int y){
 	mapConstructor->mapInstantiation();
 	mapConstructor->borderInstantion();
-	mapConstructor->mapViewPoint(x,y,textToBePrinted);
 	SetWindowText(area, TEXT(textToBePrinted));
 }
 //void GingerBeards::playerMovement(int keypressed){

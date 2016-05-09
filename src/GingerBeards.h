@@ -12,6 +12,7 @@ class GingerBeards{
 public:
 	void mapFirstRefresh(int, int);
 	//void playerMovement(int);
+	void checkForInput();
 };
 
 
