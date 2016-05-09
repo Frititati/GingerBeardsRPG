@@ -20,7 +20,7 @@ private:
 	int oldx;
 	int oldy;
 	int speedCount;
-	int speed = 1;
+	int speed = 7;
 	int viewDistance = 100; // sqrt(10)
 };
 

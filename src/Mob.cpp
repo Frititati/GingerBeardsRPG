@@ -26,7 +26,7 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	int differencex = abs(xpossition - playerx);
 	int differencey = abs(ypossition - playery);
 	if(differencex < 3 && differencey < 2){
-		cout << "Touch" <<endl;
+		//cout << "Touch" <<endl;
 	}
 	if((speedCount % speed) == 0){
 		if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){

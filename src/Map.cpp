@@ -59,7 +59,7 @@ void Map::mapInstantiation(){
 	std::copy(&mapInChar[0][0], &mapInChar[0][0]+rows*columns,&mapInCharEditable[0][0]);
 }
 void Map::mapViewPoint(int x, int y, char* strInChar){
-	int yincrease = 20, xincrease = 40;		// x is rows, y is columns
+	int yincrease = 10, xincrease = 20;		// x is rows, y is columns
 
 	signed int charAt = 0;
 	signed int yi = (y - yincrease);

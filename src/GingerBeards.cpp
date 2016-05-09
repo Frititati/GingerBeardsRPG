@@ -21,8 +21,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
 	case WM_CREATE:
 		area = CreateWindow("static", "broken",
-				WS_VISIBLE| WS_CHILD ,
-				0 , 0 , 1000 , 1000,
+				WS_VISIBLE| WS_CHILD | ES_READONLY,
+				0 , 0 , 700 , 700,
 				hwnd, (HMENU) 1, NULL, NULL
 		);
 		break;
@@ -91,11 +91,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	window = CreateWindowEx(
 	WS_EX_CLIENTEDGE, g_szClassName, "ASCII RPG",
-	WS_OVERLAPPEDWINDOW, 50, 100, 350, 370,
+	WS_OVERLAPPEDWINDOW, 50, 100, 1000, 1000,
 	NULL, NULL, hInstance, NULL);
 
-	HFONT hfReg = CreateFont(15, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,
-			TEXT("CONSOLAS"));
+	HFONT hfReg = CreateFont(15, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,TEXT("CONSOLAS"));
 	SendMessage(area, WM_SETFONT, (WPARAM) hfReg, MAKELPARAM(FALSE, 0));
 
 	int xpossitionnow = 3;
@@ -111,52 +110,25 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	ShowWindow(window, nCmdShow);
 	UpdateWindow(window);
 
-	// this approach is really slow.
-//    while(GetMessage(&Msg, NULL, 0, 0) > 0){
-//        TranslateMessage(&Msg);
-//        DispatchMessage(&Msg);
-//    }
 	Map*& refMap = mapConstructor;
-	while (1)  // LOOP FOREVER
-	{
-		// 1.  PROCESS MESSAGES FROM WINDOWS
-		if ( PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
-			// Now, this is DIFFERENT than GetMessage()!
-			// PeekMessage is NOT a BLOCKING FUNCTION.
-			// That is, PeekMessage() returns immediately
-			// with either a TRUE (there was a message
-			// for our window)
-			// or a FALSE (there was no message for our window).
-
-			// If there was a message for our window, then
-			// we want to translate and dispatch that message.
-
-			// otherwise, we want to be free to run
-			// the next frame of our program.
+	while (1){  // LOOP FOREVER
+		if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
 			if (Msg.message == WM_QUIT) {
 				break;  // BREAK OUT OF INFINITE LOOP
-						// if user is trying to quit!
 			} else {
 				TranslateMessage(&Msg);   // translates
 				DispatchMessage(&Msg);    // this line RESULTS IN
-				// a call to WndProc(), passing the message and
-				// the HWND.
-
-				// Note that in this program, all we're really using
-				// the messaging system for is for
-				// processing the QUIT message that occurs
-				// when the user clicks the X on the window
-				// to close it.
-
-				// ALL OTHER application processing happens
-				// in the 3 lines of code below
-				// (the 'check_for_user ... ' stuff)
 			}
-		} else {
+		}else{
 			mapConstructor->refreshEditLayer();
+			oneMob->mobMovement(refMap, firstPlayer);
 			tempgingerbeards->checkForInput();
+			int xplay, yplay;
+			firstPlayer->playerPossition(&xplay, &yplay);
+			mapConstructor->mapViewPoint(xplay,yplay,textToBePrinted);
+			SetWindowText(area, TEXT(textToBePrinted));
 		}
-		Sleep(16.0);
+		Sleep(16);
 	}
 
 	return Msg.wParam;
@@ -166,28 +138,25 @@ void GingerBeards::checkForInput() {
 	Map*& refMap = mapConstructor;
 	HWND& refArea = area;
 	if (GetAsyncKeyState( VK_UP)) {
-		oneMob->mobMovement(refMap, firstPlayer);
+		//oneMob->mobMovement(refMap, firstPlayer);
 		firstPlayer->playerMovement(3, refMap, refArea);
 	}
 
 	if (GetAsyncKeyState( VK_DOWN)) {
-		oneMob->mobMovement(refMap, firstPlayer);
+		//oneMob->mobMovement(refMap, firstPlayer);
 		firstPlayer->playerMovement(4, refMap, refArea);
 	}
 
 	if (GetAsyncKeyState( VK_RIGHT)) {
 		firstPlayer->playerMovement(2, refMap, refArea);
-		oneMob->mobMovement(refMap, firstPlayer);
 	}
 
 	if (GetAsyncKeyState( VK_LEFT)) {
 		firstPlayer->playerMovement(1, refMap, refArea);
-		oneMob->mobMovement(refMap, firstPlayer);
+		//oneMob->mobMovement(refMap, firstPlayer);
 	}
-	if (GetAsyncKeyState(VK_F1)) {
-		firstPlayer->playerMovement(5, refMap, refArea);
-		oneMob->mobMovement(refMap, firstPlayer);
-	}
+	firstPlayer->playerMovement(5, refMap, refArea);
+	//oneMob->mobMovement(refMap, firstPlayer);
 }
 
 void GingerBeards::mapFirstRefresh(int x, int y) {
