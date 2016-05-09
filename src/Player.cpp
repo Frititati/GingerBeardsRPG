@@ -33,12 +33,11 @@ void Player::playerMovement(int keypressed, Map*& mapEditor){
 	}
 	if(mapEditor->testBorder(xpossition, ypossition, 5)){
 		mapEditor->drawCharacter(xpossition, ypossition,playerLook);
-		//mapEditor->mapViewPoint(xpossition,ypossition,toBePrinted);
-		//SetWindowText(textArea, TEXT(toBePrinted));
-	}else{
+	} else {
 		xpossition = tempx;
 		ypossition = tempy;
 	}
+	mapEditor->drawCharacter(xpossition, ypossition,playerLook);
 }
 void Player::playerPossition(int* x, int* y){
 	*x = xpossition;

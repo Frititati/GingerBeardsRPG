@@ -13,6 +13,9 @@
 
 const int LENGTH = 4 * XINCREASE * YINCREASE + ROWS;
 const int FONT_SIZE = 12;
+// left is the x coordinate of the top left vertex of the game, top is the y
+const int RECT_LEFT = 80;
+const int RECT_TOP = 10;
 
 class GingerBeards{
 public:
