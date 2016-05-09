@@ -15,7 +15,7 @@ public:
 	void borderInCharFunc();
 	//void getVarOfMap(char* stringMap);
 	void mapViewPoint(int x, int y, char* strInChar);
-	bool testBorder(int x, int y);
+	bool testBorder(int x, int y, int size);
 	void mapInstantiation();
 	void borderInstantion();
 	void drawCharacter(int, int, char*);

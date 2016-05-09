@@ -1,10 +1,3 @@
-/*
- * Player.cpp
- *
- *  Created on: 25.04.2016
- *      Author: Michele
- */
-
 #include "Player.h"
 #include "GingerBeards.h"
 #include <windows.h>
@@ -12,7 +5,7 @@
 using namespace std;
 
 char playerLook [5];
-char toBePrinted[1000];
+char toBePrinted[500000];
 
 void Player::playerMovement(int keypressed, Map*& mapEditor, HWND& textArea){
 	playerLook[0] = '(';
@@ -38,7 +31,7 @@ void Player::playerMovement(int keypressed, Map*& mapEditor, HWND& textArea){
 	case 5:
 	break;
 	}
-	if(mapEditor->testBorder(xpossition, ypossition)){
+	if(mapEditor->testBorder(xpossition, ypossition, 5)){
 		mapEditor->drawCharacter(xpossition, ypossition,playerLook);
 		mapEditor->mapViewPoint(xpossition,ypossition,toBePrinted);
 		SetWindowText(textArea, TEXT(toBePrinted));

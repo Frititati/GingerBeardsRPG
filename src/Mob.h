@@ -13,6 +13,7 @@
 class Mob {
 public:
 	void mobMovement(Map*&, Player*&);
+	bool testTouch(int , int );
 private:
 	int xpossition = 20;
 	int ypossition = 35;

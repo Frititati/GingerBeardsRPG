@@ -1,9 +1,3 @@
-/*
- * Map.cpp
- *
- *  Created on: 20 Apr 2016
- *      Author: Filippo M Cardano
- */
 #include "map.h"
 #include <iostream>
 #include <fstream>
@@ -65,7 +59,7 @@ void Map::mapInstantiation(){
 	std::copy(&mapInChar[0][0], &mapInChar[0][0]+rows*columns,&mapInCharEditable[0][0]);
 }
 void Map::mapViewPoint(int x, int y, char* strInChar){
-	int yincrease = 10, xincrease = 20;		// x is rows, y is columns
+	int yincrease = 20, xincrease = 40;		// x is rows, y is columns
 
 	signed int charAt = 0;
 	signed int yi = (y - yincrease);
@@ -97,12 +91,14 @@ void Map::mapViewPoint(int x, int y, char* strInChar){
 void Map::borderInstantion(){
 	borderInCharFunc();
 }
-bool Map::testBorder(int x, int y){
-	if(borderInChar[y][x] == '1'){
-		return false;
-	}else{
-		return true;
+bool Map::testBorder(int x, int y, int size){
+	int sizeHelper = (size/2);
+	for(int i = (x - sizeHelper); i <= (x+sizeHelper); i++){
+		if(borderInChar[y][i] == '1'){
+			return false;
+		}
 	}
+	return true;
 }
 void Map::refreshEditLayer(){
 	std::copy(&mapInChar[0][0], &mapInChar[0][0]+rows*columns,&mapInCharEditable[0][0]);

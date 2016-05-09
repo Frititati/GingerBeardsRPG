@@ -25,6 +25,9 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	xyPlayer->playerPossition(&playerx, &playery);
 	int differencex = abs(xpossition - playerx);
 	int differencey = abs(ypossition - playery);
+	if(differencex < 3 && differencey < 2){
+		cout << "Touch" <<endl;
+	}
 	if((speedCount % speed) == 0){
 		if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
 			if(differencey < differencex){
@@ -56,7 +59,7 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 				}
 			}
 		}
-		while(!mapEditor->testBorder(xpossition, ypossition)){
+		while(!mapEditor->testBorder(xpossition, ypossition, 3)){
 			xpossition = tempx;
 			ypossition = tempy;
 			int randomMovement = rand() %100;
@@ -79,4 +82,10 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	speedCount++;
 	oldx = tempx;
 	oldy= tempy;
+}
+
+bool Mob::testTouch(int x, int y){
+
+
+	return false;
 }
