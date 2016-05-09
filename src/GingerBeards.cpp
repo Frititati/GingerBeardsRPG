@@ -144,16 +144,14 @@ void GingerBeards::draw(HWND window) {
 	HDC wdc = GetDC(window);
 	GetClientRect(window, &rect);
 	SetTextColor(wdc, 0x00000000);
-	rect.left = RECT_LEFT;
-	rect.top = RECT_TOP;
+	rect.left = 40;
+	rect.top = 10;
 	// font size based on device units
 	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0,
 				"Consolas");
 	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
-	for (int i = 0; i < COLUMNS; i++) {
 	DrawText(wdc, textToBePrinted, LENGTH, &rect,
-			DT_NOCLIP);
-	}
+	DT_NOCLIP);
 	SelectObject(wdc, oldFont);
 	DeleteObject (hf);
 	ReleaseDC(window, wdc);
