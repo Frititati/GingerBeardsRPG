@@ -10,15 +10,18 @@
 #include "map.h"
 #include "windows.h"
 
+const int PLAYER_WIDTH = 3, PLAYER_HEIGHT = 3;
+
 
 class Player {
 public:
 	void playerMovement(int, Map*&);
 	void playerPossition(int*, int*);
 	void draw(Map*&);
+	Player();
 private:
-	int xpossition = 3;
-	int ypossition = 3;
+	int xpossition;
+	int ypossition;
 };
 
 #endif /* PLAYER_H_ */

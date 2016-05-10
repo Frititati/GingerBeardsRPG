@@ -13,10 +13,11 @@
 
 const int STR_IN_CHAR_LENGTH = (VIEWPORT_WIDTH + 1) * VIEWPORT_HEIGHT;
 const int FONT_SIZE = 12;
+const char EMPTY = -1;
 
 class GingerBeards{
 public:
-	void mapFirstRefresh(int, int);
+	void mapFirstRefresh();
 	void checkForInput();
 	void draw(HWND);
 	long computeFontHeight();

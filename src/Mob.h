@@ -10,19 +10,21 @@
 #include "map.h"
 #include "player.h"
 
+const int MOB_HEIGHT = 1, MOB_WIDTH = 3;
+
 class Mob {
 public:
 	void mobMovement(Map*&, Player*&);
 	bool testTouch(int , int );
-	void draw(Map*&);
+	Mob();
 private:
-	int xpossition = 20;
-	int ypossition = 35;
+	int xpossition;
+	int ypossition;
 	int oldx;
 	int oldy;
 	int speedCount;
-	int speed = 7;
-	int viewDistance = 100; // sqrt(10)
+	int speed;
+	int viewDistance; // sqrt(10)
 };
 
 #endif /* SRC_MOB_H_ */

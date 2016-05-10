@@ -4,40 +4,59 @@
 #include <iostream>
 using namespace std;
 
-char playerLook[] = {'(', '"', '-', '"', ')'};
-char toBePrinted[500000];
+char** playerLook;
 
+Player::Player() {
+	playerLook = new char *[PLAYER_HEIGHT];
+	for (int i = 0; i < PLAYER_HEIGHT; i++) {
+		playerLook[i] = new char[PLAYER_WIDTH];
+	}
+	playerLook[0][0] = EMPTY;
+	playerLook[0][1] = 'o';
+	playerLook[0][2] = EMPTY;
 
-void Player::playerMovement(int keypressed, Map*& mapEditor){
+	playerLook[1][0] = '/';
+	playerLook[1][1] = '|';
+	playerLook[1][2] = '\\';
+	playerLook[2][0] = '/';
+	playerLook[2][1] = EMPTY;
+	playerLook[2][2] = '\\';
+	xpossition = 5;
+	ypossition = 10;
+}
+
+void Player::playerMovement(int keypressed, Map*& mapEditor) {
 	int tempx = xpossition;
 	int tempy = ypossition;
-	switch(keypressed){
+	switch (keypressed) {
 	case 1:
 		xpossition--;
-	break;
+		break;
 	case 2:
 		xpossition++;
-	break;
+		break;
 	case 3:
 		ypossition--;
-	break;
+		break;
 	case 4:
 		ypossition++;
-	break;
+		break;
 	case 5:
-	break;
+		break;
 	}
-	if(!mapEditor->testBorder(xpossition, ypossition, 5)){
+	if (!mapEditor->testBorder(xpossition, ypossition, PLAYER_WIDTH, PLAYER_HEIGHT, playerLook)) {
 		xpossition = tempx;
 		ypossition = tempy;
 	}
+
 }
 
-void Player::playerPossition(int* x, int* y){
+void Player::playerPossition(int* x, int* y) {
 	*x = xpossition;
 	*y = ypossition;
 }
 
 void Player::draw(Map*& mapEditor) {
-	mapEditor->drawCharacter(xpossition, ypossition,playerLook);
+	mapEditor->drawCharacter(xpossition, ypossition, PLAYER_WIDTH,
+			PLAYER_HEIGHT, playerLook);
 }

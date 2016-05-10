@@ -107,9 +107,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return 0;
 	}
 
-	int xpossitionnow = 3;
-	int ypossitionnow = 3;
-	tempgingerbeards->mapFirstRefresh(xpossitionnow, ypossitionnow);
+	tempgingerbeards->mapFirstRefresh();
 
 	ShowWindow(window, nCmdShow);
 	UpdateWindow(window);
@@ -124,14 +122,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				DispatchMessage(&Msg);    // this line RESULTS IN
 			}
 		} else {
-//			mapConstructor->refreshEditLayer();
-			oneMob->mobMovement(refMap, firstPlayer);
+			mapConstructor->refreshEditLayer();
 			tempgingerbeards->checkForInput();
 			int xplay, yplay;
 			firstPlayer->playerPossition(&xplay, &yplay);
 			mapConstructor->mapViewPort(xplay, yplay);
+			oneMob->mobMovement(refMap, firstPlayer);
 			firstPlayer->draw(refMap);
-			oneMob->draw(refMap);
 			mapConstructor->getStrInChar(textToBePrinted);
 			tempgingerbeards->draw(window);
 		}
@@ -150,7 +147,7 @@ void GingerBeards::draw(HWND window) {
 	rect.left = 40;
 	rect.top = 10;
 	// font size based on device units
-	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0,
+	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,
 				"Consolas");
 	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
 	DrawText(wdc, textToBePrinted, STR_IN_CHAR_LENGTH, &rect,
@@ -175,7 +172,7 @@ void GingerBeards::checkForInput() {
 	}
 }
 
-void GingerBeards::mapFirstRefresh(int x, int y) {
+void GingerBeards::mapFirstRefresh() {
 	mapConstructor->mapInstantiation();
 	mapConstructor->borderInstantion();
 }

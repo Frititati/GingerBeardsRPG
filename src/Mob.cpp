@@ -12,7 +12,23 @@
 #include <cmath>
 using namespace std;
 
-char mobLook [] = {'G', 'O', 'B'};
+char** mobLook;
+
+Mob::Mob(void) {
+	mobLook = new char *[MOB_HEIGHT];
+	mobLook[0] = new char[MOB_WIDTH];
+	mobLook[0][0] = 'G';
+	mobLook[0][1] = 'O';
+	mobLook[0][2] = 'B';
+//	for(int i = 0; i <10; i++)
+//	    array[i] = new int[10];
+
+	speedCount = 0;
+	xpossition = 20;
+	ypossition = 35;
+	speed = 7;
+	viewDistance = 100; // sqrt(10)
+}
 
 void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	int tempx = xpossition;
@@ -56,7 +72,7 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 				}
 			}
 		}
-		while(!mapEditor->testBorder(xpossition, ypossition, 3)){
+		while(!mapEditor->testBorder(xpossition, ypossition, MOB_WIDTH, MOB_HEIGHT, mobLook)){
 			xpossition = tempx;
 			ypossition = tempy;
 			int randomMovement = rand() %100;
@@ -75,13 +91,10 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 			}
 		}
 	}
+	mapEditor->drawCharacter(xpossition, ypossition, MOB_WIDTH, MOB_HEIGHT, mobLook);
 	speedCount++;
 	oldx = tempx;
 	oldy= tempy;
-}
-
-void Mob::draw(Map*& mapEditor) {
-	mapEditor->drawCharacter(xpossition, ypossition, mobLook);
 }
 
 bool Mob::testTouch(int x, int y){

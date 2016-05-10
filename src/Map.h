@@ -12,7 +12,7 @@
 const int XINCREASE = 45, YINCREASE = 15;
 const int VIEWPORT_WIDTH = 2 * XINCREASE + 1;
 const int VIEWPORT_HEIGHT = 2 * YINCREASE + 1;
-const int ROWS = 40, COLUMNS= 60;
+const int MAP_ROWS = 40, MAP_COLUMNS= 60;
 
 class Map{
 public:
@@ -20,12 +20,14 @@ public:
 	void borderInCharFunc();
 	//void getVarOfMap(char* stringMap);
 	void mapViewPort(int x, int y);
-	bool testBorder(int x, int y, int size);
+	bool testBorder(int , int , int, int, char**);
 	void mapInstantiation();
 	void borderInstantion();
-	void drawCharacter(int, int, char*);
+	void drawCharacter(int, int, int, int, char**);
 	void refreshEditLayer();
 	void getStrInChar(char*);
+private:
+	void drawCharacterXAxis(int, int, int, int, char**);
 };
 
 
