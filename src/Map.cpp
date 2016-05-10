@@ -64,9 +64,9 @@ void Map::mapViewPoint(int x, int y, char* strInChar){
 	signed int yi = y - YINCREASE;
 	signed int yblock = YINCREASE + y;
 	signed int xblock = XINCREASE + x;
-	while(yi < yblock){
+	while(yi <= yblock){
 		signed int xi = x - XINCREASE;
-		while(xi < xblock){
+		while(xi <= xblock){
 			if(yi < 0 || xi < 0 || yi >= ROWS || xi >= COLUMNS){
 				strInChar[charAt] = '-';
 			} else {

@@ -11,7 +11,7 @@
 #include <windows.h>
 #include "map.h"
 
-const int LENGTH = 4 * XINCREASE * YINCREASE + ROWS;
+const int LENGTH = (2 * XINCREASE + 1) * (2 * YINCREASE + 1) + ROWS;
 const int FONT_SIZE = 12;
 
 class GingerBeards{
