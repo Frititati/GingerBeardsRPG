@@ -12,22 +12,19 @@
 #include <cmath>
 using namespace std;
 
-char mobLook [3];
+char mobLook [] = {'G', 'O', 'B'};
 
 void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	int tempx = xpossition;
 	int tempy = ypossition;
-	mobLook[0] = 'G';
-	mobLook[1] = 'O';
-	mobLook[2] = 'B';
 	int playerx;
 	int playery;
 	xyPlayer->playerPossition(&playerx, &playery);
 	int differencex = abs(xpossition - playerx);
 	int differencey = abs(ypossition - playery);
-	if(differencex < 3 && differencey < 2){
+//	if(differencex < 3 && differencey < 2){
 		//cout << "Touch" <<endl;
-	}
+//	}
 	if((speedCount % speed) == 0){
 		if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
 			if(differencey < differencex){
@@ -78,10 +75,13 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 			}
 		}
 	}
-	mapEditor->drawCharacter(xpossition, ypossition,mobLook);
 	speedCount++;
 	oldx = tempx;
 	oldy= tempy;
+}
+
+void Mob::draw(Map*& mapEditor) {
+	mapEditor->drawCharacter(xpossition, ypossition, mobLook);
 }
 
 bool Mob::testTouch(int x, int y){

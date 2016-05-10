@@ -14,6 +14,7 @@ class Mob {
 public:
 	void mobMovement(Map*&, Player*&);
 	bool testTouch(int , int );
+	void draw(Map*&);
 private:
 	int xpossition = 20;
 	int ypossition = 35;

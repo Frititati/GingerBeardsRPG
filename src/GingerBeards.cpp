@@ -12,7 +12,7 @@ GingerBeards* tempgingerbeards = new GingerBeards();
 Player* firstPlayer = new Player();
 Mob* oneMob = new Mob();
 
-char textToBePrinted[LENGTH];
+char textToBePrinted[STR_IN_CHAR_LENGTH];
 
 long lfHeight = tempgingerbeards->computeFontHeight();
 
@@ -124,12 +124,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				DispatchMessage(&Msg);    // this line RESULTS IN
 			}
 		} else {
-			mapConstructor->refreshEditLayer();
+//			mapConstructor->refreshEditLayer();
 			oneMob->mobMovement(refMap, firstPlayer);
 			tempgingerbeards->checkForInput();
 			int xplay, yplay;
 			firstPlayer->playerPossition(&xplay, &yplay);
-			mapConstructor->mapViewPoint(xplay, yplay, textToBePrinted);
+			mapConstructor->mapViewPort(xplay, yplay);
+			firstPlayer->draw(refMap);
+			oneMob->draw(refMap);
+			mapConstructor->getStrInChar(textToBePrinted);
 			tempgingerbeards->draw(window);
 		}
 		Sleep(32);
@@ -150,7 +153,7 @@ void GingerBeards::draw(HWND window) {
 	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, TRUE, 0, 0, 0, 0, 0, 0, 0,
 				"Consolas");
 	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
-	DrawText(wdc, textToBePrinted, LENGTH, &rect,
+	DrawText(wdc, textToBePrinted, STR_IN_CHAR_LENGTH, &rect,
 	DT_NOCLIP);
 	SelectObject(wdc, oldFont);
 	DeleteObject (hf);

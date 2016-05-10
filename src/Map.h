@@ -10,6 +10,8 @@
 #include <string.h>
 
 const int XINCREASE = 45, YINCREASE = 15;
+const int VIEWPORT_WIDTH = 2 * XINCREASE + 1;
+const int VIEWPORT_HEIGHT = 2 * YINCREASE + 1;
 const int ROWS = 40, COLUMNS= 60;
 
 class Map{
@@ -17,12 +19,13 @@ public:
 	void mapInCharFunc();
 	void borderInCharFunc();
 	//void getVarOfMap(char* stringMap);
-	void mapViewPoint(int x, int y, char* strInChar);
+	void mapViewPort(int x, int y);
 	bool testBorder(int x, int y, int size);
 	void mapInstantiation();
 	void borderInstantion();
 	void drawCharacter(int, int, char*);
 	void refreshEditLayer();
+	void getStrInChar(char*);
 };
 
 

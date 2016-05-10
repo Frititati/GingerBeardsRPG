@@ -4,41 +4,41 @@
 #include <string.h>
 using namespace std;
 
+char mapInChar[ROWS][COLUMNS];
+char mapInCharEditable[VIEWPORT_HEIGHT][VIEWPORT_WIDTH];
+char borderInChar[ROWS][COLUMNS];
 
+int viewportX, viewportY;
 
-char mapInChar [ROWS][COLUMNS];
-char mapInCharEditable [ROWS][COLUMNS];
-char borderInChar [ROWS][COLUMNS];
-
-void Map::mapInCharFunc(){
+void Map::mapInCharFunc() {
 	string line;
-	ifstream myfile ("bordercontrol.txt");
-	if (myfile.is_open()){
+	ifstream myfile("bordercontrol.txt");
+	if (myfile.is_open()) {
 		int a = 0;
-		while(getline(myfile,line)){
-			for(unsigned int i = 0; i < line.length(); i++){
+		while (getline(myfile, line)) {
+			for (unsigned int i = 0; i < line.length(); i++) {
 				mapInChar[a][i] = line.at(i);
 			}
 			a++;
 		}
 		myfile.close();
-	} else{
+	} else {
 		cout << "Unable to open file" << endl;
 	}
 }
-void Map::borderInCharFunc(){
+void Map::borderInCharFunc() {
 	string line;
-	ifstream myfile ("control.txt");
-	if (myfile.is_open()){
+	ifstream myfile("control.txt");
+	if (myfile.is_open()) {
 		int a = 0;
-		while(getline(myfile,line)){
-			for(unsigned int i = 0; i < line.length(); i++){
+		while (getline(myfile, line)) {
+			for (unsigned int i = 0; i < line.length(); i++) {
 				borderInChar[a][i] = line.at(i);
 			}
 			a++;
 		}
 		myfile.close();
-	} else{
+	} else {
 		cout << "Unable to open file" << endl;
 	}
 }
@@ -54,70 +54,63 @@ void Map::borderInCharFunc(){
 //		chatAt++;
 //	}
 //}
-void Map::mapInstantiation(){
+void Map::mapInstantiation() {
 	mapInCharFunc();
-	std::copy(&mapInChar[0][0], &mapInChar[0][0]+ROWS*COLUMNS,&mapInCharEditable[0][0]);
+//	std::copy(&mapInChar[0][0], &mapInChar[0][0]+ROWS*COLUMNS,&mapInCharEditable[0][0]);
 }
-void Map::mapViewPoint(int x, int y, char* strInChar){
-
-	signed int charAt = 0;
-	signed int yi = y - YINCREASE;
-	signed int yblock = YINCREASE + y;
-	signed int xblock = XINCREASE + x;
-	while(yi <= yblock){
-		signed int xi = x - XINCREASE;
-		while(xi <= xblock){
-			if(yi < 0 || xi < 0 || yi >= ROWS || xi >= COLUMNS){
-				strInChar[charAt] = '-';
+void Map::mapViewPort(int x, int y) {
+	viewportX = x - XINCREASE;
+	viewportY = y - YINCREASE;
+	for (int yi = 0; yi < VIEWPORT_HEIGHT; yi++) {
+		int absoluteY = viewportY + yi;
+		for (int xi = 0; xi < VIEWPORT_WIDTH; xi++) {
+			int absoluteX = viewportX + xi;
+			if (absoluteY < 0 || absoluteX < 0 || absoluteY >= ROWS || absoluteX >= COLUMNS) {
+				mapInCharEditable[yi][xi] = '-';
 			} else {
-				strInChar[charAt] = mapInCharEditable[yi][xi];
+				mapInCharEditable[yi][xi] = mapInChar[absoluteY][absoluteX];
 			}
-//			if(yi == y && xi == (x+1)){
-//				strInChar[charAt - 4] = '(';
-//				strInChar[charAt - 3] = '‘';
-//				strInChar[charAt - 2] = '-';
-//				strInChar[charAt - 1] = '‘';
-//				strInChar[charAt] = ')';
-//			}
-			charAt++;
-			xi++;
 		}
-		strInChar[charAt] = '\n';
-		charAt++;
-		yi++;
 	}
 }
-void Map::borderInstantion(){
+
+void Map::getStrInChar(char* strInChar) {
+	for (int i = 0, charAt = 0; i < VIEWPORT_HEIGHT; i++, charAt++) {
+		for (int j = 0; j < VIEWPORT_WIDTH; j++, charAt++) {
+			strInChar[charAt] = mapInCharEditable[i][j];
+		}
+		strInChar[charAt] = '\n';
+	}
+}
+
+void Map::borderInstantion() {
 	borderInCharFunc();
 }
-bool Map::testBorder(int x, int y, int size){
-	int sizeHelper = (size/2);
-	for(int i = (x - sizeHelper); i <= (x+sizeHelper); i++){
-		if(borderInChar[y][i] == '1'){
+
+bool Map::testBorder(int x, int y, int size) {
+	int sizeHelper = (size / 2);
+	for (int i = (x - sizeHelper); i <= (x + sizeHelper); i++) {
+		if (borderInChar[y][i] == '1') {
 			return false;
 		}
 	}
 	return true;
 }
-void Map::refreshEditLayer(){
-	std::copy(&mapInChar[0][0], &mapInChar[0][0]+ROWS*COLUMNS,&mapInCharEditable[0][0]);
+void Map::refreshEditLayer() {
+	std::copy(&mapInChar[0][0], &mapInChar[0][0] + ROWS * COLUMNS,
+			&mapInCharEditable[0][0]);
 }
-void Map::drawCharacter(int x, int y, char* drawPoints){
-	signed int lenght = strlen(drawPoints);
-	if(lenght == 5){
-		mapInCharEditable[y][x - 2] = drawPoints[0];
-		mapInCharEditable[y ][x- 1] = drawPoints[1];
-		mapInCharEditable[y][x] = drawPoints[2];
-		mapInCharEditable[y ][x+ 1] = drawPoints[3];
-		mapInCharEditable[y][x + 2] = drawPoints[4];
-	}
-	if(lenght == 3){
-		mapInCharEditable[y ][x- 1] = drawPoints[0];
-		mapInCharEditable[y][x] = drawPoints[1];
-		mapInCharEditable[y ][x+ 1] = drawPoints[2];
-	}
-	if(lenght == 1){
-			mapInCharEditable[y][x] = drawPoints[0];
+void Map::drawCharacter(int x, int y, char* drawPoints) {
+	signed int length = strlen(drawPoints);
+	int relativeX = x - viewportX;
+	int relativeY = y - viewportY;
+	int sizeHelper = length / 2;
+	// maybe expand to a for in the future, so that it is possible to have two-dimensional characters
+	if (relativeY < 0)
+		return;
+	for (int i = relativeX + sizeHelper, j = length - 1; i >= 0 && j >= 0;
+			i--, j--) {
+		mapInCharEditable[relativeY][i] = drawPoints[j];
 	}
 }
 

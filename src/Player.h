@@ -15,6 +15,7 @@ class Player {
 public:
 	void playerMovement(int, Map*&);
 	void playerPossition(int*, int*);
+	void draw(Map*&);
 private:
 	int xpossition = 3;
 	int ypossition = 3;

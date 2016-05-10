@@ -31,10 +31,13 @@ void Player::playerMovement(int keypressed, Map*& mapEditor){
 		xpossition = tempx;
 		ypossition = tempy;
 	}
-	mapEditor->drawCharacter(xpossition, ypossition,playerLook);
 }
+
 void Player::playerPossition(int* x, int* y){
 	*x = xpossition;
 	*y = ypossition;
 }
 
+void Player::draw(Map*& mapEditor) {
+	mapEditor->drawCharacter(xpossition, ypossition,playerLook);
+}
