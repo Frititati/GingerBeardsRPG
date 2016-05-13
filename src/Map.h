@@ -12,7 +12,7 @@
 const int XINCREASE = 45, YINCREASE = 15;
 const int VIEWPORT_WIDTH = 2 * XINCREASE + 1;
 const int VIEWPORT_HEIGHT = 2 * YINCREASE + 1;
-const int MAP_ROWS = 40, MAP_COLUMNS= 60;
+const int MAP_ROWS = 181, MAP_COLUMNS= 400;
 
 class Map{
 public:

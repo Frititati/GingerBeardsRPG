@@ -13,7 +13,7 @@ int viewportX, viewportY;
 
 void Map::mapInCharFunc() {
 	string line;
-	ifstream myfile("bordercontrol.txt");
+	ifstream myfile("map2.txt");
 	if (myfile.is_open()) {
 		int a = 0;
 		while (getline(myfile, line)) {
@@ -29,7 +29,7 @@ void Map::mapInCharFunc() {
 }
 void Map::borderInCharFunc() {
 	string line;
-	ifstream myfile("control.txt");
+	ifstream myfile("collisionmap2.txt");
 	if (myfile.is_open()) {
 		int a = 0;
 		while (getline(myfile, line)) {
@@ -74,6 +74,10 @@ void Map::mapViewPort(int x, int y) {
 			}
 		}
 	}
+//	for (int i = 0; i < MAP_ROWS; i++){
+//		for(int j =0; j < MAP_COLUMNS; j++){
+//		}
+//	}
 }
 
 void Map::getStrInChar(char* strInChar) {
@@ -126,13 +130,12 @@ void Map::drawCharacter(int x, int y, int drawWidth, int drawHeight,
 					drawHeight - i - 1, drawPoints);
 		}
 	} else {
-		cout << "The character is longer than the map!" << endl;
+		cout << "The character is longer than the viewport!" << endl;
 	}
 
 }
 
-void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i,
-		char** drawPoints) {
+void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i, char** drawPoints) {
 	int rightmostChar;
 	if (leftmostChar >= 0) {
 		for (int j = 0; leftmostChar + j < VIEWPORT_WIDTH && j < drawWidth;

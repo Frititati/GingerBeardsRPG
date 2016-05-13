@@ -6,7 +6,7 @@
 using namespace std;
 
 const char g_szClassName[] = "myWindowClass";
-//HWND area;
+
 Map* mapConstructor = new Map();
 GingerBeards* tempgingerbeards = new GingerBeards();
 Player* firstPlayer = new Player();
@@ -122,7 +122,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				DispatchMessage(&Msg);    // this line RESULTS IN
 			}
 		} else {
-			mapConstructor->refreshEditLayer();
+			//mapConstructor->refreshEditLayer();
 			tempgingerbeards->checkForInput();
 			int xplay, yplay;
 			firstPlayer->playerPossition(&xplay, &yplay);
@@ -146,14 +146,24 @@ void GingerBeards::draw(HWND window) {
 	SetTextColor(wdc, 0x00000000);
 	rect.left = 40;
 	rect.top = 10;
-	// font size based on device units
+//	RECT recttest;
+//	recttest.left = 10;
+//	recttest.right = 920;
+//	recttest.bottom = 320;
+//	recttest.top = 10;
 	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,
 				"Consolas");
 	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
-	DrawText(wdc, textToBePrinted, STR_IN_CHAR_LENGTH, &rect,
-	DT_NOCLIP);
+
+	DrawText(wdc, textToBePrinted, STR_IN_CHAR_LENGTH, &rect, DT_NOCLIP);
+
+//	HBRUSH redbrush = (HBRUSH) CreateSolidBrush(RGB(255,0,0));
+
+//	FillRect(wdc, &recttest, redbrush);
+
 	SelectObject(wdc, oldFont);
 	DeleteObject (hf);
+//	DeleteObject(redbrush);
 	ReleaseDC(window, wdc);
 }
 

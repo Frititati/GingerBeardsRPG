@@ -13,7 +13,7 @@
 
 const int STR_IN_CHAR_LENGTH = (VIEWPORT_WIDTH + 1) * VIEWPORT_HEIGHT;
 const int FONT_SIZE = 12;
-const char EMPTY = -1;
+const char EMPTY = ' ';
 
 class GingerBeards{
 public:

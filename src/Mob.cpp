@@ -26,8 +26,8 @@ Mob::Mob(void) {
 	speedCount = 0;
 	xpossition = 20;
 	ypossition = 35;
-	speed = 7;
-	viewDistance = 100; // sqrt(10)
+	speed = 3;
+	viewDistance = 900; // sqrt(10)
 }
 
 void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){

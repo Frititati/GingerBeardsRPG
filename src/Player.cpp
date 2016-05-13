@@ -22,7 +22,7 @@ Player::Player() {
 	playerLook[2][1] = EMPTY;
 	playerLook[2][2] = '\\';
 	xpossition = 5;
-	ypossition = 10;
+	ypossition = 25;
 }
 
 void Player::playerMovement(int keypressed, Map*& mapEditor) {
