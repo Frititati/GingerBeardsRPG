@@ -5,6 +5,7 @@
 using namespace std;
 
 char** playerLook;
+Map* mapDraw;
 
 Player::Player() {
 	playerLook = new char *[PLAYER_HEIGHT];
@@ -57,6 +58,49 @@ void Player::playerPossition(int* x, int* y) {
 }
 
 void Player::draw(Map*& mapEditor) {
-	mapEditor->drawCharacter(xpossition, ypossition, PLAYER_WIDTH,
-			PLAYER_HEIGHT, playerLook);
+	mapDraw = mapEditor;
+	mapEditor->drawCharacter(xpossition, ypossition, PLAYER_WIDTH,PLAYER_HEIGHT, playerLook);
+	if(attackDir == 8){
+		attack(8);
+	}else{
+		attack(attackDir);
+	}
+}
+void Player::setAttack(int direction){
+	if(testchar == 0){
+		attackDir = direction;
+	}
+}
+void Player::attack(int direction){
+	if(direction == 1){
+		testchar++;
+		switch(testchar){
+			case 1:
+				mapDraw->drawChar(xpossition-2, ypossition-1, '\\');
+				//mapEditor->drawChar(xpossition-1, ypossition-2, '\\');
+			break;
+			case 2:
+				mapDraw->drawChar(xpossition-1, ypossition-2, '\\');
+				//mapEditor->drawChar(xpossition, ypossition-2, '|');
+			break;
+			case 3:
+				mapDraw->drawChar(xpossition, ypossition-2, '|');
+				//mapEditor->drawChar(xpossition+1, ypossition-2, '/');
+			break;
+			case 4:
+				mapDraw->drawChar(xpossition+1, ypossition-2, '/');
+				//mapEditor->drawChar(xpossition+2, ypossition-1, '/');
+			break;
+			case 5:
+				mapDraw->drawChar(xpossition+2, ypossition-1, '/');
+			break;
+			case 6:
+				testchar = 0;
+			break;
+		}
+	}
+
+	if(testchar == 0){
+		attackDir = 8;
+	}
 }

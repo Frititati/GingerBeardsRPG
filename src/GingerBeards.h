@@ -21,6 +21,7 @@ public:
 	void checkForInput();
 	void draw(HWND);
 	long computeFontHeight();
+	int test;
 
 };
 

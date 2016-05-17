@@ -15,7 +15,7 @@ const int MOB_HEIGHT = 1, MOB_WIDTH = 3;
 class Mob {
 public:
 	void mobMovement(Map*&, Player*&);
-	bool testTouch(int , int );
+	bool testTouch();
 	Mob();
 private:
 	int xpossition;

@@ -132,7 +132,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 			mapConstructor->getStrInChar(textToBePrinted);
 			tempgingerbeards->draw(window);
 		}
-		Sleep(32);
+		Sleep(18);
 
 	}
 
@@ -151,14 +151,10 @@ void GingerBeards::draw(HWND window) {
 //	recttest.right = 920;
 //	recttest.bottom = 320;
 //	recttest.top = 10;
-	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,
-				"Consolas");
+	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,	"Consolas");
 	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
-
 	DrawText(wdc, textToBePrinted, STR_IN_CHAR_LENGTH, &rect, DT_NOCLIP);
-
 //	HBRUSH redbrush = (HBRUSH) CreateSolidBrush(RGB(255,0,0));
-
 //	FillRect(wdc, &recttest, redbrush);
 
 	SelectObject(wdc, oldFont);
@@ -169,17 +165,27 @@ void GingerBeards::draw(HWND window) {
 
 void GingerBeards::checkForInput() {
 	Map*& refMap = mapConstructor;
-	if (GetAsyncKeyState( VK_UP)) {
+	if (GetAsyncKeyState(VK_UP)) {
 		firstPlayer->playerMovement(3, refMap);
-	} else if (GetAsyncKeyState( VK_DOWN)) {
+	} else if (GetAsyncKeyState(VK_DOWN)) { // thjis one
 		firstPlayer->playerMovement(4, refMap);
+		//cout << key << endl;
 	} else if (GetAsyncKeyState( VK_RIGHT)) {
 		firstPlayer->playerMovement(2, refMap);
 	} else if (GetAsyncKeyState( VK_LEFT)) {
 		firstPlayer->playerMovement(1, refMap);
+	} else if (GetAsyncKeyState( 0x41)) {
+		firstPlayer->playerMovement(1, refMap); // a
+	} else if (GetAsyncKeyState( 0x53)) {
+		firstPlayer->playerMovement(4, refMap); // s
+	} else if (GetAsyncKeyState( 0x44)) {
+		firstPlayer->playerMovement(2, refMap); // d
+	} else if (GetAsyncKeyState( 0x57)) {
+		firstPlayer->setAttack(1);// w
 	} else {
 		firstPlayer->playerMovement(5, refMap);
 	}
+	//cout << GetAsyncKeyState(VK_DOWN) << endl;
 }
 
 void GingerBeards::mapFirstRefresh() {

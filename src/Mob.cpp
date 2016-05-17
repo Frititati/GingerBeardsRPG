@@ -13,6 +13,7 @@
 using namespace std;
 
 char** mobLook;
+Player* playerposition;
 
 Mob::Mob(void) {
 	mobLook = new char *[MOB_HEIGHT];
@@ -31,18 +32,20 @@ Mob::Mob(void) {
 }
 
 void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
+	playerposition = xyPlayer;
 	int tempx = xpossition;
 	int tempy = ypossition;
 	int playerx;
 	int playery;
-	xyPlayer->playerPossition(&playerx, &playery);
+	playerposition->playerPossition(&playerx, &playery);
 	int differencex = abs(xpossition - playerx);
 	int differencey = abs(ypossition - playery);
-//	if(differencex < 3 && differencey < 2){
-		//cout << "Touch" <<endl;
-//	}
 	if((speedCount % speed) == 0){
 		if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
+			if(differencey < 3 && differencex < 4){
+				testTouch();
+				goto nomovement;
+			}
 			if(differencey < differencex){
 				if(xpossition < playerx){
 					xpossition++;
@@ -91,14 +94,13 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 			}
 		}
 	}
-	mapEditor->drawCharacter(xpossition, ypossition, MOB_WIDTH, MOB_HEIGHT, mobLook);
+	nomovement: mapEditor->drawCharacter(xpossition, ypossition, MOB_WIDTH, MOB_HEIGHT, mobLook);
 	speedCount++;
 	oldx = tempx;
 	oldy= tempy;
 }
 
-bool Mob::testTouch(int x, int y){
-
-
+bool Mob::testTouch(){
+	//cout<< "touch" << endl;
 	return false;
 }

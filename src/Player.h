@@ -18,10 +18,14 @@ public:
 	void playerMovement(int, Map*&);
 	void playerPossition(int*, int*);
 	void draw(Map*&);
+	void setAttack(int);
+	void attack(int);
 	Player();
 private:
 	int xpossition;
 	int ypossition;
+	int attackDir = 8;
+	int testchar = 0;
 };
 
 #endif /* PLAYER_H_ */

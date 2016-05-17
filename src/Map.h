@@ -24,6 +24,7 @@ public:
 	void mapInstantiation();
 	void borderInstantion();
 	void drawCharacter(int, int, int, int, char**);
+	void drawChar(int, int, char);
 	void refreshEditLayer();
 	void getStrInChar(char*);
 private:

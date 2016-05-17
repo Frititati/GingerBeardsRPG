@@ -132,7 +132,12 @@ void Map::drawCharacter(int x, int y, int drawWidth, int drawHeight,
 	} else {
 		cout << "The character is longer than the viewport!" << endl;
 	}
-
+}
+void Map::drawChar(int x, int y, char draw) {
+	// coordinates relative to the viewport
+	int viewportRelativeX = x - viewportX;
+	int viewportRelativeY = y - viewportY;
+	mapInCharEditable[viewportRelativeY][viewportRelativeX] = draw;
 }
 
 void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i, char** drawPoints) {
