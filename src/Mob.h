@@ -14,17 +14,22 @@ const int MOB_HEIGHT = 1, MOB_WIDTH = 3;
 
 class Mob {
 public:
+	void creatingMob(int, int);
 	void mobMovement(Map*&, Player*&);
 	bool testTouch();
+	void detectDamage(Map*&);
+	int getHealth();
 	Mob();
+	~Mob();
 private:
 	int xpossition;
 	int ypossition;
-	int oldx;
-	int oldy;
+	int differencex;
+	int differencey;
+	int hp;
 	int speedCount;
 	int speed;
-	int viewDistance; // sqrt(10)
+	int viewDistance;
 };
 
 #endif /* SRC_MOB_H_ */

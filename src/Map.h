@@ -27,6 +27,10 @@ public:
 	void drawChar(int, int, char);
 	void refreshEditLayer();
 	void getStrInChar(char*);
+//	void getBorders(char**);
+	void editBorder(int, int, char);
+	void restoreBorder();
+	char getBorderCell(int, int);
 private:
 	void drawCharacterXAxis(int, int, int, int, char**);
 };

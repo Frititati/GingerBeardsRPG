@@ -15,7 +15,17 @@ using namespace std;
 char** mobLook;
 Player* playerposition;
 
-Mob::Mob(void) {
+Mob::Mob(){
+	hp = 5;
+	speedCount = 0;
+	xpossition = 30;
+	ypossition = 30;
+	speed = 15;
+	viewDistance = 400;
+}
+
+void Mob::creatingMob(int x, int y) {
+	cout << "i am mob" <<endl;
 	mobLook = new char *[MOB_HEIGHT];
 	mobLook[0] = new char[MOB_WIDTH];
 	mobLook[0][0] = 'G';
@@ -23,12 +33,12 @@ Mob::Mob(void) {
 	mobLook[0][2] = 'B';
 //	for(int i = 0; i <10; i++)
 //	    array[i] = new int[10];
-
+	hp = 3;
 	speedCount = 0;
-	xpossition = 20;
-	ypossition = 35;
-	speed = 3;
-	viewDistance = 900; // sqrt(10)
+	xpossition = x;
+	ypossition = y;
+	speed = 5;
+	viewDistance = 400; // sqrt(10)
 }
 
 void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
@@ -38,8 +48,8 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	int playerx;
 	int playery;
 	playerposition->playerPossition(&playerx, &playery);
-	int differencex = abs(xpossition - playerx);
-	int differencey = abs(ypossition - playery);
+	differencex = abs(xpossition - playerx);
+	differencey = abs(ypossition - playery);
 	if((speedCount % speed) == 0){
 		if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
 			if(differencey < 3 && differencex < 4){
@@ -95,12 +105,40 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 		}
 	}
 	nomovement: mapEditor->drawCharacter(xpossition, ypossition, MOB_WIDTH, MOB_HEIGHT, mobLook);
+	if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
+		detectDamage(mapEditor);
+	}
 	speedCount++;
-	oldx = tempx;
-	oldy= tempy;
 }
 
 bool Mob::testTouch(){
 	//cout<< "touch" << endl;
 	return false;
+}
+void Mob::detectDamage(Map*& mapChecker){
+	for(int i = xpossition -1; i< xpossition+2;i++){
+		char damageIndicator = mapChecker->getBorderCell(i, ypossition);
+		if((damageIndicator != '0') && ((speedCount % 6) == 0)){ //we do this to test if he is getting hit and to make sure he doesn't get hit 100 times
+			switch(damageIndicator){
+			case '6':
+				cout << "i got hit" << endl;
+				hp--;
+			break;
+			case '7':
+			break;
+			case '8':
+			break;
+			case '9':
+			break;
+			}
+			break;
+		}
+	}
+}
+
+int Mob::getHealth(){
+	return hp;
+}
+
+Mob::~Mob() {
 }

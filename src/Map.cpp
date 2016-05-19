@@ -8,6 +8,7 @@ using namespace std;
 char mapInChar[MAP_ROWS][MAP_COLUMNS];
 char mapInCharEditable[VIEWPORT_HEIGHT][VIEWPORT_WIDTH];
 char borderInChar[MAP_ROWS][MAP_COLUMNS];
+char borderInCharRestore[MAP_ROWS][MAP_COLUMNS];
 
 int viewportX, viewportY;
 
@@ -43,18 +44,6 @@ void Map::borderInCharFunc() {
 		cout << "Unable to open file" << endl;
 	}
 }
-//void Map::getVarOfMap(char* strInChar){
-//	mapInCharFunc();
-//	int chatAt = 0;
-//	for(int i = 0; i<rows; i++){
-//		for(int ii = 0; ii<columns; ii++){
-//			strInChar[chatAt] = mapInChar[i][ii];
-//			chatAt++;
-//		}
-//		strInChar[chatAt] = '\n';
-//		chatAt++;
-//	}
-//}
 void Map::mapInstantiation() {
 	mapInCharFunc();
 //	std::copy(&mapInChar[0][0], &mapInChar[0][0]+ROWS*COLUMNS,&mapInCharEditable[0][0]);
@@ -91,6 +80,7 @@ void Map::getStrInChar(char* strInChar) {
 
 void Map::borderInstantion() {
 	borderInCharFunc();
+	std::copy(&borderInChar[0][0], &borderInChar[0][0]+MAP_ROWS*MAP_COLUMNS,&borderInCharRestore[0][0]);
 }
 
 bool Map::testBorder(int x, int y, int width, int height, char** look) {
@@ -104,6 +94,7 @@ bool Map::testBorder(int x, int y, int width, int height, char** look) {
 	}
 	return true;
 }
+
 void Map::refreshEditLayer() {
 	std::copy(&mapInChar[0][0], &mapInChar[0][0] + MAP_ROWS * MAP_COLUMNS,
 			&mapInCharEditable[0][0]);
@@ -162,4 +153,28 @@ void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i, char
 		cout << "The character is wider than the viewport!" << endl;
 	}
 }
+
+void Map::restoreBorder(){
+	std::copy(&borderInCharRestore[0][0], &borderInCharRestore[0][0]+MAP_ROWS*MAP_COLUMNS,&borderInChar[0][0]);
+}
+
+void Map::editBorder(int x, int y, char charEdited){
+	if(borderInChar[y][x] != '1'){
+		borderInChar[y][x] = charEdited;
+	}
+}
+char Map::getBorderCell(int x, int y){
+	return borderInChar[y][x];
+}
+
+
+
+//void Map::getBorders(char** getBorders){
+//	for(int i=0; i < MAP_ROWS; i++){
+//		for(int j=0; j< MAP_COLUMNS; j++){
+//			getBorders[i][j] = borderInChar[i][j];
+//		}
+//	}
+//}
+
 

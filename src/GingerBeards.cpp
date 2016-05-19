@@ -1,6 +1,6 @@
 #include "gingerbeards.h"
 #include "player.h"
-#include "mob.h"
+#include "mobcontrol.h"
 #include <iostream>
 #include <fstream>
 using namespace std;
@@ -10,7 +10,7 @@ const char g_szClassName[] = "myWindowClass";
 Map* mapConstructor = new Map();
 GingerBeards* tempgingerbeards = new GingerBeards();
 Player* firstPlayer = new Player();
-Mob* oneMob = new Mob();
+MobControl* mobs = new MobControl();
 
 char textToBePrinted[STR_IN_CHAR_LENGTH];
 
@@ -26,37 +26,6 @@ long GingerBeards::computeFontHeight() {
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	switch (msg) {
-//	case WM_CREATE:
-//		area = CreateWindow("static", NULL,
-//				WS_VISIBLE| WS_CHILD,
-//				0 , 0 , 700 , 700,
-//				hwnd, (HMENU) 1, NULL, NULL
-//		);
-//		break;
-//    	case WM_KEYDOWN:
-//    		mapConstructor->refreshEditLayer();	//this is run everytime we call the a key
-//    		if(wParam == VK_LEFT){
-//    			oneMob->mobMovement(refMap, firstPlayer);
-//    			firstPlayer->playerMovement(1, refMap, refArea);
-//    		}
-//    		if(wParam == VK_RIGHT){
-//    			oneMob->mobMovement(refMap, firstPlayer);
-//    			firstPlayer->playerMovement(2, refMap, refArea);
-//    		}
-//    		if(wParam == VK_UP){
-//    			oneMob->mobMovement(refMap, firstPlayer);
-//    			firstPlayer->playerMovement(3, refMap, refArea);
-//			}
-//			if(wParam == VK_DOWN){
-//    			oneMob->mobMovement(refMap, firstPlayer);
-//				firstPlayer->playerMovement(4, refMap, refArea);
-//			}
-//			if(wParam == VK_F1){
-//				oneMob->mobMovement(refMap, firstPlayer);
-//				firstPlayer->playerMovement(5, refMap, refArea);
-//			}
-//		break;
-
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
 		break;
@@ -121,18 +90,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				TranslateMessage(&Msg);   // translates
 				DispatchMessage(&Msg);    // this line RESULTS IN
 			}
-		} else {
-			//mapConstructor->refreshEditLayer();
-			tempgingerbeards->checkForInput();
-			int xplay, yplay;
-			firstPlayer->playerPossition(&xplay, &yplay);
-			mapConstructor->mapViewPort(xplay, yplay);
-			oneMob->mobMovement(refMap, firstPlayer);
-			firstPlayer->draw(refMap);
-			mapConstructor->getStrInChar(textToBePrinted);
-			tempgingerbeards->draw(window);
 		}
-		Sleep(18);
+		tempgingerbeards->checkForInput();
+		int xplay, yplay;
+		firstPlayer->playerPossition(&xplay, &yplay);
+		mapConstructor->mapViewPort(xplay, yplay);
+		mobs->completeAI(refMap, firstPlayer);
+		firstPlayer->draw(refMap);
+		mapConstructor->getStrInChar(textToBePrinted);
+		tempgingerbeards->draw(window);
+		Sleep(32);
 
 	}
 
@@ -151,15 +118,14 @@ void GingerBeards::draw(HWND window) {
 //	recttest.right = 920;
 //	recttest.bottom = 320;
 //	recttest.top = 10;
+//	HBRUSH redbrush = (HBRUSH) CreateSolidBrush(RGB(255,0,0));
+//	FillRect(wdc, &recttest, redbrush);
+//	DeleteObject(redbrush);
 	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,	"Consolas");
 	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
 	DrawText(wdc, textToBePrinted, STR_IN_CHAR_LENGTH, &rect, DT_NOCLIP);
-//	HBRUSH redbrush = (HBRUSH) CreateSolidBrush(RGB(255,0,0));
-//	FillRect(wdc, &recttest, redbrush);
-
 	SelectObject(wdc, oldFont);
 	DeleteObject (hf);
-//	DeleteObject(redbrush);
 	ReleaseDC(window, wdc);
 }
 
@@ -167,25 +133,24 @@ void GingerBeards::checkForInput() {
 	Map*& refMap = mapConstructor;
 	if (GetAsyncKeyState(VK_UP)) {
 		firstPlayer->playerMovement(3, refMap);
-	} else if (GetAsyncKeyState(VK_DOWN)) { // thjis one
+	} else if (GetAsyncKeyState(VK_DOWN)) { // this one
 		firstPlayer->playerMovement(4, refMap);
-		//cout << key << endl;
 	} else if (GetAsyncKeyState( VK_RIGHT)) {
 		firstPlayer->playerMovement(2, refMap);
 	} else if (GetAsyncKeyState( VK_LEFT)) {
 		firstPlayer->playerMovement(1, refMap);
-	} else if (GetAsyncKeyState( 0x41)) {
-		firstPlayer->playerMovement(1, refMap); // a
-	} else if (GetAsyncKeyState( 0x53)) {
-		firstPlayer->playerMovement(4, refMap); // s
-	} else if (GetAsyncKeyState( 0x44)) {
-		firstPlayer->playerMovement(2, refMap); // d
-	} else if (GetAsyncKeyState( 0x57)) {
-		firstPlayer->setAttack(1);// w
-	} else {
-		firstPlayer->playerMovement(5, refMap);
 	}
-	//cout << GetAsyncKeyState(VK_DOWN) << endl;
+	if (GetAsyncKeyState( 0x41)) {
+		firstPlayer->setAttack(1); // a
+	} else if (GetAsyncKeyState( 0x53)) {
+		firstPlayer->setAttack(4); // s
+	} else if (GetAsyncKeyState( 0x44)) {
+		firstPlayer->setAttack(2); // d
+	} else if (GetAsyncKeyState( 0x57)) {
+		firstPlayer->setAttack(3);// w
+	}else if (GetAsyncKeyState( VK_F1)) {
+		firstPlayer->setAttack(5);// w
+	}
 }
 
 void GingerBeards::mapFirstRefresh() {
