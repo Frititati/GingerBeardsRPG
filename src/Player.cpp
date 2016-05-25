@@ -12,9 +12,11 @@ Player::Player() {
 	for (int i = 0; i < PLAYER_HEIGHT; i++) {
 		playerLook[i] = new char[PLAYER_WIDTH];
 	}
-	playerLook[0][0] = EMPTY;
-	playerLook[0][1] = 'o';
-	playerLook[0][2] = EMPTY;
+//	(°_ʖ°)
+//	EMPTY o EMPTY
+	playerLook[0][0] = '^';
+	playerLook[0][1] = '_';
+	playerLook[0][2] = '^';
 	playerLook[1][0] = '/';
 	playerLook[1][1] = '|';
 	playerLook[1][2] = '\\';
@@ -34,15 +36,27 @@ void Player::playerMovement(int keypressed, Map*& mapEditor) {
 	switch (keypressed) {
 	case 1:
 		xpossition--;
+		playerLook[0][0] = '<';
+		playerLook[0][1] = '_';
+		playerLook[0][2] = '<';
 		break;
 	case 2:
 		xpossition++;
+		playerLook[0][0] = '>';
+		playerLook[0][1] = '_';
+		playerLook[0][2] = '>';
 		break;
 	case 3:
 		ypossition--;
+		playerLook[0][0] = '>';
+		playerLook[0][1] = '_';
+		playerLook[0][2] = '<';
 		break;
 	case 4:
 		ypossition++;
+		playerLook[0][0] = '>';
+		playerLook[0][1] = '_';
+		playerLook[0][2] = '<';
 		break;
 	}
 	if (!mapEditor->testBorder(xpossition, ypossition, PLAYER_WIDTH, PLAYER_HEIGHT, playerLook)) {
@@ -74,6 +88,7 @@ void Player::setAttack(int direction){
 void Player::attack(int direction){
 
 	if(direction == 1){//a
+		playerLook[1][0] = '-';
 		if(attackCounter ==0){
 			mapDraw->editBorder(xpossition-1, ypossition+2, '6');
 			mapDraw->editBorder(xpossition-2, ypossition+1, '6');
@@ -101,9 +116,11 @@ void Player::attack(int direction){
 			case 6:
 				attackCounter = 0;
 				mapDraw->restoreBorder();
+				playerLook[1][0] = '/';
 			break;
 		}
 	}else if(direction == 2){//d
+		playerLook[1][2] = '-';
 		if(attackCounter ==0){
 			mapDraw->editBorder(xpossition+1, ypossition-2, '6');
 			mapDraw->editBorder(xpossition+2, ypossition-1, '6');
@@ -131,6 +148,7 @@ void Player::attack(int direction){
 			case 6:
 				attackCounter = 0;
 				mapDraw->restoreBorder();
+				playerLook[1][2] = '\\';
 			break;
 		}
 	}else if(direction == 3){//w

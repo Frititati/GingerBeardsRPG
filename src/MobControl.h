@@ -14,7 +14,7 @@ public:
 	MobControl();
 	virtual ~MobControl();
 	void moveMobs(Map*, Player*);
-	void checkHealth();
+	bool checkHealth();
 	void completeAI(Map*&, Player*&);
 private:
 	int mobArrayLenth;

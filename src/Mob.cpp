@@ -16,16 +16,15 @@ char** mobLook;
 Player* playerposition;
 
 Mob::Mob(){
-	hp = 5;
+	hp = 3;
 	speedCount = 0;
 	xpossition = 30;
 	ypossition = 30;
-	speed = 15;
+	speed = 7;
 	viewDistance = 400;
 }
 
 void Mob::creatingMob(int x, int y) {
-	cout << "i am mob" <<endl;
 	mobLook = new char *[MOB_HEIGHT];
 	mobLook[0] = new char[MOB_WIDTH];
 	mobLook[0][0] = 'G';
@@ -121,7 +120,6 @@ void Mob::detectDamage(Map*& mapChecker){
 		if((damageIndicator != '0') && ((speedCount % 6) == 0)){ //we do this to test if he is getting hit and to make sure he doesn't get hit 100 times
 			switch(damageIndicator){
 			case '6':
-				cout << "i got hit" << endl;
 				hp--;
 			break;
 			case '7':

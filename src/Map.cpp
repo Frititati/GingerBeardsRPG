@@ -14,7 +14,7 @@ int viewportX, viewportY;
 
 void Map::mapInCharFunc() {
 	string line;
-	ifstream myfile("map2.txt");
+	ifstream myfile("map3.txt");
 	if (myfile.is_open()) {
 		int a = 0;
 		while (getline(myfile, line)) {
@@ -30,7 +30,7 @@ void Map::mapInCharFunc() {
 }
 void Map::borderInCharFunc() {
 	string line;
-	ifstream myfile("collisionmap2.txt");
+	ifstream myfile("collisionmap3.txt");
 	if (myfile.is_open()) {
 		int a = 0;
 		while (getline(myfile, line)) {

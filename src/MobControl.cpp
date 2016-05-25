@@ -21,17 +21,25 @@ MobControl::MobControl(){
 
 void MobControl::completeAI(Map*& mapEditor, Player*& xyPlayer){
 	moveMobs(mapEditor, xyPlayer);
+	if(checkHealth()){
+		int x =0;
+		int y = 0;
+		xyPlayer->playerPossition(&x, &y);
+		mapEditor->drawChar(x, y - 2, '*');
+		mapEditor->drawChar(x-1, y - 2, '*');
+		mapEditor->drawChar(x+1, y - 2, '*');
+	}
 }
 
 void MobControl::moveMobs(Map* mapEditor, Player* xyPlayer){
 	for(int i = 0 ; i < mobArrayLenth; i++){
 		mobArray[i].mobMovement(mapEditor, xyPlayer);
 	}
-	checkHealth();
 }
 
-void MobControl::checkHealth(){
+bool MobControl::checkHealth(){
 	int tempMobArrayLength = mobArrayLenth;
+	bool what = false;
 	for(int i = 0 ; i < tempMobArrayLength; i++){
 		if(mobArray[i].getHealth() < 1){
 			mobArrayLenth--;
@@ -42,8 +50,10 @@ void MobControl::checkHealth(){
 					tempcounter++;
 				}
 			}
+			what = true;
 		}
 	}
+	return what;
 }
 MobControl::~MobControl() {
 	// TODO Auto-generated destructor stub

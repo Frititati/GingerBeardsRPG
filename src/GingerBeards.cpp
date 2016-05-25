@@ -67,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 	window = CreateWindowEx(
 	WS_EX_CLIENTEDGE, g_szClassName, "ASCII RPG",
-	WS_OVERLAPPEDWINDOW, 50, 100, 1000, 1000,
+	WS_OVERLAPPEDWINDOW, 50, 100, 900, 700,
 	NULL, NULL, hInstance, NULL);
 
 	if (window == NULL) {
@@ -148,7 +148,7 @@ void GingerBeards::checkForInput() {
 		firstPlayer->setAttack(2); // d
 	} else if (GetAsyncKeyState( 0x57)) {
 		firstPlayer->setAttack(3);// w
-	}else if (GetAsyncKeyState( VK_F1)) {
+	}else if (GetAsyncKeyState( 0x51)) {
 		firstPlayer->setAttack(5);// w
 	}
 }
