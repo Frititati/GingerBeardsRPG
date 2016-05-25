@@ -7,6 +7,8 @@ using namespace std;
 char** playerLook;
 Map* mapDraw;
 
+bool isDead = false;
+
 Player::Player() {
 	playerLook = new char *[PLAYER_HEIGHT];
 	for (int i = 0; i < PLAYER_HEIGHT; i++) {
@@ -28,11 +30,17 @@ Player::Player() {
 	ypossition = 25;
 	attackCounter = 0;
 	attackDir = 8;
+	maxHP = 512;
+	HP = 256;
+	defense = 1;
+	attackStrength = 3;
 }
 
 void Player::playerMovement(int keypressed, Map*& mapEditor) {
 	int tempx = xpossition;
 	int tempy = ypossition;
+	if (isDead)
+		return;
 	switch (keypressed) {
 	case 1:
 		xpossition--;
@@ -59,11 +67,33 @@ void Player::playerMovement(int keypressed, Map*& mapEditor) {
 		playerLook[0][2] = '<';
 		break;
 	}
+
 	if (!mapEditor->testBorder(xpossition, ypossition, PLAYER_WIDTH, PLAYER_HEIGHT, playerLook)) {
 		xpossition = tempx;
 		ypossition = tempy;
 	}
 
+}
+
+void Player::heal(int amount) {
+	if (!isDead && HP < maxHP) {
+		HP += amount;
+	}
+}
+
+// true if the player still lives
+bool Player::damage(int amount) {
+	if (amount <= defense)
+		return true;
+	HP -= amount - defense;
+	if (HP <= 0) {
+		cout << "You've met with a terrible fate." << endl;
+		playerLook[0][0] = 'x';
+		playerLook[0][2] = 'x';
+		isDead = true;
+		return false;
+	}
+	return true;
 }
 
 void Player::playerPossition(int* x, int* y) {
@@ -85,8 +115,26 @@ void Player::setAttack(int direction){
 		attackDir = direction;
 	}
 }
-void Player::attack(int direction){
 
+int Player::getHP() {
+	return HP;
+}
+
+int Player::getMaxHP() {
+	return maxHP;
+}
+
+int Player::getAttackStrength() {
+	return attackStrength;
+}
+
+int Player::getDefense() {
+	return defense;
+}
+
+void Player::attack(int direction){
+	if (isDead)
+		return;
 	if(direction == 1){//a
 		playerLook[1][0] = '-';
 		if(attackCounter ==0){

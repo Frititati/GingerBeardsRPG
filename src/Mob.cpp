@@ -16,12 +16,13 @@ char** mobLook;
 Player* playerposition;
 
 Mob::Mob(){
+	mobLook = new char *[MOB_HEIGHT];
 	hp = 3;
-	speedCount = 0;
-	xpossition = 30;
-	ypossition = 30;
-	speed = 7;
-	viewDistance = 400;
+		speedCount = 0;
+		xpossition = 30;
+		ypossition = 30;
+		speed = 7;
+		viewDistance = 400;
 }
 
 void Mob::creatingMob(int x, int y) {
@@ -32,12 +33,14 @@ void Mob::creatingMob(int x, int y) {
 	mobLook[0][2] = 'B';
 //	for(int i = 0; i <10; i++)
 //	    array[i] = new int[10];
-	hp = 3;
+	hp = 17;
+	attackStrength = 15;
 	speedCount = 0;
 	xpossition = x;
 	ypossition = y;
 	speed = 5;
 	viewDistance = 400; // sqrt(10)
+	aggressive = true;
 }
 
 void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
@@ -50,9 +53,9 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	differencex = abs(xpossition - playerx);
 	differencey = abs(ypossition - playery);
 	if((speedCount % speed) == 0){
-		if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
+		if(aggressive && (pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
 			if(differencey < 3 && differencex < 4){
-				testTouch();
+				aggressive = playerposition->damage(attackStrength);
 				goto nomovement;
 			}
 			if(differencey < differencex){
@@ -110,17 +113,13 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	speedCount++;
 }
 
-bool Mob::testTouch(){
-	//cout<< "touch" << endl;
-	return false;
-}
 void Mob::detectDamage(Map*& mapChecker){
 	for(int i = xpossition -1; i< xpossition+2;i++){
 		char damageIndicator = mapChecker->getBorderCell(i, ypossition);
 		if((damageIndicator != '0') && ((speedCount % 6) == 0)){ //we do this to test if he is getting hit and to make sure he doesn't get hit 100 times
 			switch(damageIndicator){
 			case '6':
-				hp--;
+				hp -= playerposition->getAttackStrength();
 			break;
 			case '7':
 			break;
