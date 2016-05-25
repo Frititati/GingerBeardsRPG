@@ -7,8 +7,8 @@
 
 #ifndef SRC_MOB_H_
 #define SRC_MOB_H_
-#include "map.h"
-#include "player.h"
+#include "Map.h"
+#include "Player.h"
 
 const int MOB_HEIGHT = 1, MOB_WIDTH = 3;
 
@@ -16,7 +16,6 @@ class Mob {
 public:
 	void creatingMob(int, int);
 	void mobMovement(Map*&, Player*&);
-	bool testTouch();
 	void detectDamage(Map*&);
 	int getHealth();
 	Mob();
@@ -27,9 +26,11 @@ private:
 	int differencex;
 	int differencey;
 	int hp;
+	int attackStrength;
 	int speedCount;
 	int speed;
 	int viewDistance;
+	bool aggressive;
 };
 
 #endif /* SRC_MOB_H_ */

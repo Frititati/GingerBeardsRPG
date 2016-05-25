@@ -12,6 +12,12 @@ public:
 	void playerPossition(int*, int*);
 	void draw(Map*&);
 	void setAttack(int);
+	int getHP();
+	int getAttackStrength();
+	int getMaxHP();
+	int getDefense();
+	void heal(int);
+	bool damage(int);
 	void attack(int);
 	Player();
 private:
@@ -19,6 +25,10 @@ private:
 	int ypossition;
 	int attackDir;
 	int attackCounter;
+	int maxHP;
+	int HP;
+	int defense;
+	int attackStrength;
 };
 
 #endif /* PLAYER_H_ */

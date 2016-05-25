@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <tgmath.h>
 using namespace std;
 
 char mapInChar[MAP_ROWS][MAP_COLUMNS];
@@ -63,10 +64,6 @@ void Map::mapViewPort(int x, int y) {
 			}
 		}
 	}
-//	for (int i = 0; i < MAP_ROWS; i++){
-//		for(int j =0; j < MAP_COLUMNS; j++){
-//		}
-//	}
 }
 
 void Map::getStrInChar(char* strInChar) {
@@ -80,7 +77,8 @@ void Map::getStrInChar(char* strInChar) {
 
 void Map::borderInstantion() {
 	borderInCharFunc();
-	std::copy(&borderInChar[0][0], &borderInChar[0][0]+MAP_ROWS*MAP_COLUMNS,&borderInCharRestore[0][0]);
+	std::copy(&borderInChar[0][0], &borderInChar[0][0] + MAP_ROWS * MAP_COLUMNS,
+			&borderInCharRestore[0][0]);
 }
 
 bool Map::testBorder(int x, int y, int width, int height, char** look) {
@@ -124,6 +122,82 @@ void Map::drawCharacter(int x, int y, int drawWidth, int drawHeight,
 		cout << "The character is longer than the viewport!" << endl;
 	}
 }
+
+void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentDefense) {
+	int innerWidth = HEALTHBAR_WIDTH - 2;
+	int numberOfBars = round((float) currentHP / maxHP * innerWidth);
+	// draw attack and defense
+	int j = drawStat(0, currentAttack, "Attack: ", 8, 8 + DIGITS);
+	j = drawStat(j, currentDefense, "Defense: ", 9, 9 + DIGITS);
+	// draw health bar
+	int lengthCurrentHP, lengthMaxHP;
+	char* scurrentHP = this->toChar(currentHP, &lengthCurrentHP);
+	char* smaxHP = this->toChar(maxHP, &lengthMaxHP);
+	mapInCharEditable[0][j++] = '[';
+	int i = 0;
+	for (; i < numberOfBars; i++, j++) {
+		mapInCharEditable[0][j] = '|';
+	}
+	for (; i < innerWidth; i++, j++) {
+		mapInCharEditable[0][j] = ' ';
+	}
+	mapInCharEditable[0][j] = ']';
+	// go to the end of maxHP
+	int middle = j - 1 - innerWidth / 2;
+	mapInCharEditable[0][middle] = '/';
+	for (int k = 0; k < lengthMaxHP; k++) {
+		mapInCharEditable[0][middle + 1 + k] = smaxHP[k];
+	}
+
+	for (int k = 0; k < lengthCurrentHP; k++) {
+		mapInCharEditable[0][middle - lengthCurrentHP + k] = scurrentHP[k];
+	}
+
+	j++;
+	for (; j < VIEWPORT_WIDTH; j++) {
+		mapInCharEditable[0][j] = ' ';
+	}
+}
+
+int Map::drawStat(int j, int stat, char* label, int labelSize, int size) {
+	int digitCount;
+	char* digits;
+	// draw label
+	for (int i = 0; i < labelSize; j++, i++) {
+		mapInCharEditable[0][j] = label[i];
+	}
+	digits = this->toChar(stat, &digitCount);
+	// draw digits
+	for (int i = 0; i < digitCount; i++, j++) {
+		mapInCharEditable[0][j] = digits[i];
+	}
+	// pad with blanks
+	for (int i = size - labelSize - digitCount; i > 0; i--, j++) {
+		mapInCharEditable[0][j] = ' ';
+	}
+	// add one trailing space
+	mapInCharEditable[0][j++] = ' ';
+	return j;
+}
+
+char* Map::toChar(int i, int* length) {
+	if (i <= 0) {
+		char* result = new char[1];
+		result[0] = '0';
+		*length = 1;
+		return result;
+	}
+	int c = 0;
+	for (int j = i; j > 0; j /= 10, c++)
+		;
+	char* result = new char[c];
+	for (int j = i, k = c - 1; j > 0; j /= 10, k--) {
+		result[k] = j % 10 + '0';
+	}
+	*length = c;
+	return result;
+}
+
 void Map::drawChar(int x, int y, char draw) {
 	// coordinates relative to the viewport
 	int viewportRelativeX = x - viewportX;
@@ -131,7 +205,8 @@ void Map::drawChar(int x, int y, char draw) {
 	mapInCharEditable[viewportRelativeY][viewportRelativeX] = draw;
 }
 
-void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i, char** drawPoints) {
+void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i,
+		char** drawPoints) {
 	int rightmostChar;
 	if (leftmostChar >= 0) {
 		for (int j = 0; leftmostChar + j < VIEWPORT_WIDTH && j < drawWidth;
@@ -154,20 +229,20 @@ void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i, char
 	}
 }
 
-void Map::restoreBorder(){
-	std::copy(&borderInCharRestore[0][0], &borderInCharRestore[0][0]+MAP_ROWS*MAP_COLUMNS,&borderInChar[0][0]);
+void Map::restoreBorder() {
+	std::copy(&borderInCharRestore[0][0],
+			&borderInCharRestore[0][0] + MAP_ROWS * MAP_COLUMNS,
+			&borderInChar[0][0]);
 }
 
-void Map::editBorder(int x, int y, char charEdited){
-	if(borderInChar[y][x] != '1'){
+void Map::editBorder(int x, int y, char charEdited) {
+	if (borderInChar[y][x] != '1') {
 		borderInChar[y][x] = charEdited;
 	}
 }
-char Map::getBorderCell(int x, int y){
+char Map::getBorderCell(int x, int y) {
 	return borderInChar[y][x];
 }
-
-
 
 //void Map::getBorders(char** getBorders){
 //	for(int i=0; i < MAP_ROWS; i++){
@@ -176,5 +251,4 @@ char Map::getBorderCell(int x, int y){
 //		}
 //	}
 //}
-
 

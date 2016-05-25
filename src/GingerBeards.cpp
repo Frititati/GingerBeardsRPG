@@ -94,9 +94,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		tempgingerbeards->checkForInput();
 		int xplay, yplay;
 		firstPlayer->playerPossition(&xplay, &yplay);
+		firstPlayer->heal(1);
 		mapConstructor->mapViewPort(xplay, yplay);
 		mobs->completeAI(refMap, firstPlayer);
 		firstPlayer->draw(refMap);
+		mapConstructor->drawStatsBar(firstPlayer->getMaxHP(),
+				firstPlayer->getHP(), firstPlayer->getAttackStrength(),
+				firstPlayer->getDefense());
 		mapConstructor->getStrInChar(textToBePrinted);
 		tempgingerbeards->draw(window);
 		Sleep(32);
