@@ -127,12 +127,13 @@ void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentD
 	int innerWidth = HEALTHBAR_WIDTH - 2;
 	int numberOfBars = round((float) currentHP / maxHP * innerWidth);
 	// draw attack and defense
-	int j = drawStat(0, currentAttack, "Attack: ", 8, 8 + DIGITS);
-	j = drawStat(j, currentDefense, "Defense: ", 9, 9 + DIGITS);
+	int j = drawStat(0, currentAttack, "Attack: ", 8);
+	j = drawStat(j, currentDefense, "Defense: ", 9);
 	// draw health bar
 	int lengthCurrentHP, lengthMaxHP;
 	char* scurrentHP = this->toChar(currentHP, &lengthCurrentHP);
 	char* smaxHP = this->toChar(maxHP, &lengthMaxHP);
+
 	mapInCharEditable[0][j++] = '[';
 	int i = 0;
 	for (; i < numberOfBars; i++, j++) {
@@ -141,8 +142,7 @@ void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentD
 	for (; i < innerWidth; i++, j++) {
 		mapInCharEditable[0][j] = ' ';
 	}
-	mapInCharEditable[0][j] = ']';
-	// go to the end of maxHP
+	// go to the middle of the bar
 	int middle = j - 1 - innerWidth / 2;
 	mapInCharEditable[0][middle] = '/';
 	for (int k = 0; k < lengthMaxHP; k++) {
@@ -152,14 +152,14 @@ void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentD
 	for (int k = 0; k < lengthCurrentHP; k++) {
 		mapInCharEditable[0][middle - lengthCurrentHP + k] = scurrentHP[k];
 	}
+	mapInCharEditable[0][j++] = ']';
 
-	j++;
 	for (; j < VIEWPORT_WIDTH; j++) {
 		mapInCharEditable[0][j] = ' ';
 	}
 }
 
-int Map::drawStat(int j, int stat, char* label, int labelSize, int size) {
+int Map::drawStat(int j, int stat, char* label, int labelSize) {
 	int digitCount;
 	char* digits;
 	// draw label
@@ -172,7 +172,7 @@ int Map::drawStat(int j, int stat, char* label, int labelSize, int size) {
 		mapInCharEditable[0][j] = digits[i];
 	}
 	// pad with blanks
-	for (int i = size - labelSize - digitCount; i > 0; i--, j++) {
+	for (int i = DIGITS - digitCount; i > 0; i--, j++) {
 		mapInCharEditable[0][j] = ' ';
 	}
 	// add one trailing space

@@ -3,18 +3,30 @@
 #include "mobcontrol.h"
 #include <iostream>
 #include <fstream>
+#include "Menu.h"
+
 using namespace std;
 
 const char g_szClassName[] = "myWindowClass";
 
-Map* mapConstructor = new Map();
+Menu* menu = new Menu();
+Map* mapConstructor;
 GingerBeards* tempgingerbeards = new GingerBeards();
-Player* firstPlayer = new Player();
-MobControl* mobs = new MobControl();
+Player* firstPlayer;
+MobControl* mobs;
+
+bool isGameRunning = false;
 
 char textToBePrinted[STR_IN_CHAR_LENGTH];
 
 long lfHeight = tempgingerbeards->computeFontHeight();
+
+enum GameState {
+	MAIN_MENU, IN_GAME, LOAD_GAME, QUIT
+};
+
+enum GameState gameState = MAIN_MENU;
+bool stateShift = false;
 
 // get the height of the font based on device units
 long GingerBeards::computeFontHeight() {
@@ -40,11 +52,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	return 0;
 }
 
+HWND window;
+MSG Msg;
+
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		LPSTR lpCmdLine, int nCmdShow) {
 	WNDCLASSEX wc;
-	HWND window;
-	MSG Msg;
 
 	wc.cbSize = sizeof(WNDCLASSEX);
 	wc.style = 0;
@@ -76,24 +89,50 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		return 0;
 	}
 
-	tempgingerbeards->mapFirstRefresh();
-
 	ShowWindow(window, nCmdShow);
 	UpdateWindow(window);
 
-	Map*& refMap = mapConstructor;
-	while (1) {  // LOOP FOREVER
-		if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
-			if (Msg.message == WM_QUIT) {
-				break;  // BREAK OUT OF INFINITE LOOP
-			} else {
-				TranslateMessage(&Msg);   // translates
-				DispatchMessage(&Msg);    // this line RESULTS IN
-			}
+	while (gameState != QUIT) {
+		stateShift = false;
+		switch (gameState) {
+		case MAIN_MENU:
+			tempgingerbeards->menuLoop();
+			break;
+		case IN_GAME:
+			tempgingerbeards->gameLoop();
+			break;
 		}
-		tempgingerbeards->checkForInput();
+
+	}
+
+	return Msg.wParam;
+}
+
+void GingerBeards::menuLoop() {
+	if (isGameRunning) {
+		menu->inGame();
+		menu->setMessage("Nice to see you again <3", 24);
+	} else {
+		menu->notInGame();
+		menu->setMessage("HI! Welcome to GingerBeards RPG *.*", 35);
+	}
+	while (!stateShift) {
+		tempgingerbeards->peekMessage();
+		tempgingerbeards->checkForMenuInput();
+		menu->draw();
+		menu->getStrInChar(textToBePrinted);
+		tempgingerbeards->draw(window);
+		Sleep(MENU_DELAY_MS);
+	}
+}
+
+void GingerBeards::gameLoop() {
+	Map*& refMap = mapConstructor;
+	while (!stateShift) {  // LOOP FOREVER
+		tempgingerbeards->peekMessage();
+		tempgingerbeards->checkForGameInput();
 		int xplay, yplay;
-		firstPlayer->playerPossition(&xplay, &yplay);
+		firstPlayer->playerPosition(&xplay, &yplay);
 		firstPlayer->heal(1);
 		mapConstructor->mapViewPort(xplay, yplay);
 		mobs->completeAI(refMap, firstPlayer);
@@ -103,11 +142,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				firstPlayer->getDefense());
 		mapConstructor->getStrInChar(textToBePrinted);
 		tempgingerbeards->draw(window);
-		Sleep(32);
-
+		Sleep(GAME_DELAY_MS);
 	}
+}
 
-	return Msg.wParam;
+void GingerBeards::peekMessage() {
+	if (PeekMessage(&Msg, NULL, 0, 0, PM_REMOVE)) {
+		if (Msg.message == WM_QUIT) {
+			gameState = QUIT;
+			stateShift = true;  // BREAK OUT OF INFINITE LOOP
+		} else {
+			TranslateMessage(&Msg);   // translates
+			DispatchMessage(&Msg);    // this line RESULTS IN
+		}
+	}
 }
 
 void GingerBeards::draw(HWND window) {
@@ -125,35 +173,128 @@ void GingerBeards::draw(HWND window) {
 //	HBRUSH redbrush = (HBRUSH) CreateSolidBrush(RGB(255,0,0));
 //	FillRect(wdc, &recttest, redbrush);
 //	DeleteObject(redbrush);
-	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,	"Consolas");
+	HFONT hf = CreateFont(lfHeight, 0, 0, 0, 0, FALSE, 0, 0, 0, 0, 0, 0, 0,
+			"Consolas");
 	HFONT oldFont = (HFONT) SelectObject(wdc, hf);
 	DrawText(wdc, textToBePrinted, STR_IN_CHAR_LENGTH, &rect, DT_NOCLIP);
 	SelectObject(wdc, oldFont);
-	DeleteObject (hf);
+	DeleteObject(hf);
 	ReleaseDC(window, wdc);
 }
 
-void GingerBeards::checkForInput() {
+void GingerBeards::setupGame() {
+	mapConstructor = new Map();
+	firstPlayer = new Player();
+	mobs = new MobControl();
+	tempgingerbeards->mapFirstRefresh();
+	isGameRunning = true;
+}
+
+void GingerBeards::checkForMenuInput() {
+	if (GetAsyncKeyState(VK_UP)) {
+		menu->cursorUp();
+	} else if (GetAsyncKeyState(VK_DOWN)) {
+		menu->cursorDown();
+	} else if (GetAsyncKeyState(0x0D)) {
+		switch (menu->getSelectedItem()) {
+		case 0:	// new game
+			setupGame();
+			stateShift = true;
+			gameState = IN_GAME;
+			break;
+		case 1:	// continue
+//			if (!isGameRunning) {
+//				menu->setMessage("Please load or start a new game first :)",
+//						40);
+//			} else {
+				stateShift = true;
+				gameState = IN_GAME;
+//			}
+			break;
+		case 2: // save
+//			if (!tempgingerbeards->saveGame()) {
+//				menu->setMessage("Please, load or start a new game first >.<",
+//						41);
+//			}
+			tempgingerbeards->saveGame();
+			break;
+		case 3: // load
+			if (!tempgingerbeards->loadGame()) {
+				menu->setMessage("No save file found :(", 21);
+			} else {
+				stateShift = true;
+				gameState = IN_GAME;
+			}
+			break;
+		case 4:
+			// quit
+			stateShift = true;
+			gameState = QUIT;
+		}
+	}
+}
+
+bool GingerBeards::saveGame() {
+//	if (!isGameRunning)
+//		return false;
+	int x, y;
+	ofstream myfile;
+	myfile.open("save.gb");
+	firstPlayer->playerPosition(&x, &y);
+	int HP = firstPlayer->getHP();
+//	myfile.write(reinterpret_cast<const char *>(&x), sizeof(x));
+	myfile << x << endl;
+	myfile << y << endl;
+	myfile << HP << endl;
+	menu->setMessage("Save successful ;)", 18);
+	myfile.close();
+	return true;
+}
+//Save successful ;)
+
+bool GingerBeards::loadGame() {
+	ifstream myfile;
+	int x, y, HP;
+	myfile.open("save.gb");
+	if (!myfile.is_open())
+		return false;
+	setupGame();
+	myfile >> x;
+	myfile >> y;
+	myfile >> HP;
+	firstPlayer->teleport(x, y);
+	firstPlayer->setHP(HP);
+	menu->setMessage("Loading complete :D", 19);
+	myfile.close();
+	return true;
+}
+
+void GingerBeards::checkForGameInput() {
 	Map*& refMap = mapConstructor;
+	// movement
 	if (GetAsyncKeyState(VK_UP)) {
 		firstPlayer->playerMovement(3, refMap);
-	} else if (GetAsyncKeyState(VK_DOWN)) { // this one
+	} else if (GetAsyncKeyState(VK_DOWN)) {
 		firstPlayer->playerMovement(4, refMap);
 	} else if (GetAsyncKeyState( VK_RIGHT)) {
 		firstPlayer->playerMovement(2, refMap);
 	} else if (GetAsyncKeyState( VK_LEFT)) {
 		firstPlayer->playerMovement(1, refMap);
 	}
-	if (GetAsyncKeyState( 0x41)) {
+	// attack
+	if (GetAsyncKeyState(0x41)) {
 		firstPlayer->setAttack(1); // a
-	} else if (GetAsyncKeyState( 0x53)) {
+	} else if (GetAsyncKeyState(0x53)) {
 		firstPlayer->setAttack(4); // s
-	} else if (GetAsyncKeyState( 0x44)) {
+	} else if (GetAsyncKeyState(0x44)) {
 		firstPlayer->setAttack(2); // d
-	} else if (GetAsyncKeyState( 0x57)) {
-		firstPlayer->setAttack(3);// w
-	}else if (GetAsyncKeyState( 0x51)) {
-		firstPlayer->setAttack(5);// w
+	} else if (GetAsyncKeyState(0x57)) {
+		firstPlayer->setAttack(3); // w
+	} else if (GetAsyncKeyState(0x51)) {
+		firstPlayer->setAttack(5); // q
+	} else if (GetAsyncKeyState(0x4D)) {
+		stateShift = true;			// m
+		gameState = MAIN_MENU;
 	}
 }
 

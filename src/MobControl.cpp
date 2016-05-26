@@ -24,7 +24,7 @@ void MobControl::completeAI(Map*& mapEditor, Player*& xyPlayer){
 	if(checkHealth()){
 		int x =0;
 		int y = 0;
-		xyPlayer->playerPossition(&x, &y);
+		xyPlayer->playerPosition(&x, &y);
 		mapEditor->drawChar(x, y - 2, '*');
 		mapEditor->drawChar(x-1, y - 2, '*');
 		mapEditor->drawChar(x+1, y - 2, '*');

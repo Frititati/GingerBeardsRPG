@@ -49,7 +49,7 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 	int tempy = ypossition;
 	int playerx;
 	int playery;
-	playerposition->playerPossition(&playerx, &playery);
+	playerposition->playerPosition(&playerx, &playery);
 	differencex = abs(xpossition - playerx);
 	differencey = abs(ypossition - playery);
 	if((speedCount % speed) == 0){

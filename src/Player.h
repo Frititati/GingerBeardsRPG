@@ -9,20 +9,22 @@ const int PLAYER_WIDTH = 3, PLAYER_HEIGHT = 3;
 class Player {
 public:
 	void playerMovement(int, Map*&);
-	void playerPossition(int*, int*);
+	void playerPosition(int*, int*);
 	void draw(Map*&);
 	void setAttack(int);
 	int getHP();
 	int getAttackStrength();
 	int getMaxHP();
 	int getDefense();
+	void setHP(int);
 	void heal(int);
+	void teleport(int, int);
 	bool damage(int);
 	void attack(int);
 	Player();
 private:
-	int xpossition;
-	int ypossition;
+	int xposition;
+	int yposition;
 	int attackDir;
 	int attackCounter;
 	int maxHP;

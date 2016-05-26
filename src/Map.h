@@ -28,6 +28,7 @@ public:
 	void drawCharacter(int, int, int, int, char**);
 	void drawChar(int, int, char);
 	void drawStatsBar(int, int, int, int);
+	void drawMenu();
 	void refreshEditLayer();
 	void getStrInChar(char*);
 //	void getBorders(char**);
@@ -37,7 +38,7 @@ public:
 private:
 	char* toChar(int, int*);
 	void drawCharacterXAxis(int, int, int, int, char**);
-	int drawStat(int j, int stat, char* label, int labelSize, int size);
+	int drawStat(int j, int stat, char* label, int labelSize);
 };
 
 

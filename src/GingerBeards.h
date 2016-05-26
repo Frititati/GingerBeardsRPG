@@ -14,15 +14,21 @@
 const int STR_IN_CHAR_LENGTH = (VIEWPORT_WIDTH + 1) * VIEWPORT_HEIGHT;
 const int FONT_SIZE = 12;
 const char EMPTY = ' ';
+const int GAME_DELAY_MS = 32;
 
 class GingerBeards{
 public:
 	void mapFirstRefresh();
-	void checkForInput();
+	void checkForMenuInput();
+	void checkForGameInput();
 	void draw(HWND);
 	long computeFontHeight();
-	int test;
-
+	void peekMessage();
+	void gameLoop();
+	void menuLoop();
+	void setupGame();
+	bool saveGame();
+	bool loadGame();
 };
 
 
