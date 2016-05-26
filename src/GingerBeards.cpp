@@ -142,6 +142,9 @@ void GingerBeards::gameLoop() {
 				firstPlayer->getDefense());
 		mapConstructor->getStrInChar(textToBePrinted);
 		tempgingerbeards->draw(window);
+		if (firstPlayer->hasDied()) {
+			isGameRunning = false;
+		}
 		Sleep(GAME_DELAY_MS);
 	}
 }

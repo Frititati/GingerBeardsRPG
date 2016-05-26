@@ -7,9 +7,10 @@ using namespace std;
 char** playerLook;
 Map* mapDraw;
 
-bool isDead = false;
+bool isDead;
 
 Player::Player() {
+	isDead = false;
 	playerLook = new char *[PLAYER_HEIGHT];
 	for (int i = 0; i < PLAYER_HEIGHT; i++) {
 		playerLook[i] = new char[PLAYER_WIDTH];
@@ -79,6 +80,10 @@ void Player::heal(int amount) {
 	if (!isDead && HP < maxHP) {
 		HP += amount;
 	}
+}
+
+bool Player::hasDied() {
+	return isDead;
 }
 
 // true if the player still lives

@@ -18,6 +18,7 @@ public:
 	int getDefense();
 	void setHP(int);
 	void heal(int);
+	bool hasDied();
 	void teleport(int, int);
 	bool damage(int);
 	void attack(int);
