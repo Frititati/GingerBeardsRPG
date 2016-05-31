@@ -17,7 +17,10 @@ public:
 	int getMaxHP();
 	int getDefense();
 	void setHP(int);
-	void heal(int);
+	void addHP(int);
+	void addDef(int);
+	void addAtk(int);
+	void heal();
 	bool hasDied();
 	void teleport(int, int);
 	bool damage(int);
@@ -32,6 +35,8 @@ private:
 	int HP;
 	int defense;
 	int attackStrength;
+	int healPerSec;
+	int healDelaySec;
 };
 
 #endif /* PLAYER_H_ */

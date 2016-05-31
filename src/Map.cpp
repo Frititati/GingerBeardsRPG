@@ -15,7 +15,7 @@ int viewportX, viewportY;
 
 void Map::mapInCharFunc() {
 	string line;
-	ifstream myfile("map3.txt");
+	ifstream myfile("map4.txt");
 	if (myfile.is_open()) {
 		int a = 0;
 		while (getline(myfile, line)) {
@@ -31,7 +31,7 @@ void Map::mapInCharFunc() {
 }
 void Map::borderInCharFunc() {
 	string line;
-	ifstream myfile("collisionmap3.txt");
+	ifstream myfile("collisionmap4.txt");
 	if (myfile.is_open()) {
 		int a = 0;
 		while (getline(myfile, line)) {
@@ -82,6 +82,9 @@ void Map::borderInstantion() {
 }
 
 bool Map::testBorder(int x, int y, int width, int height, char** look) {
+	if((x >= MAP_COLUMNS) || (x < 0) || (y >= MAP_ROWS) || (y < 0)){
+		return false;
+	}
 	int widthHelper = width / 2, heightHelper = height / 2;
 	for (int i = y - heightHelper, li = 0; i <= y + heightHelper; i++, li++) {
 		for (int j = x - widthHelper, lj = 0; j <= x + widthHelper; j++, lj++) {

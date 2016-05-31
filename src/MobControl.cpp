@@ -8,20 +8,20 @@
 #include "MobControl.h"
 #include "mob.h"
 #include <iostream>
+#include <cstdlib>
 using namespace std;
 
-Mob mobArray [5];
+Mob mobArray [20];
 
 
 MobControl::MobControl(){
-	mobArray[0].creatingMob(20, 30);
-	mobArray[1].creatingMob(20,40);
-	mobArrayLenth = 5;
+	mobArrayLenth = 0;
+	counter=0;
 }
 
 void MobControl::completeAI(Map*& mapEditor, Player*& xyPlayer){
 	moveMobs(mapEditor, xyPlayer);
-	if(checkHealth()){
+	if(checkHealth(xyPlayer)){
 		int x =0;
 		int y = 0;
 		xyPlayer->playerPosition(&x, &y);
@@ -29,6 +29,11 @@ void MobControl::completeAI(Map*& mapEditor, Player*& xyPlayer){
 		mapEditor->drawChar(x-1, y - 2, '*');
 		mapEditor->drawChar(x+1, y - 2, '*');
 	}
+	if((counter % 50) == 0){
+		smartSpawn(xyPlayer, mapEditor);
+		counter = 0;
+	}
+	counter++;
 }
 
 void MobControl::moveMobs(Map* mapEditor, Player* xyPlayer){
@@ -37,14 +42,18 @@ void MobControl::moveMobs(Map* mapEditor, Player* xyPlayer){
 	}
 }
 
-bool MobControl::checkHealth(){
+bool MobControl::checkHealth(Player*& addStats){
 	int tempMobArrayLength = mobArrayLenth;
 	bool what = false;
 	for(int i = 0 ; i < tempMobArrayLength; i++){
 		if(mobArray[i].getHealth() < 1){
 			mobArrayLenth--;
+			addStats->setHP(mobArray[i].getHealthAddLoot()+ addStats->getMaxHP());
+			addStats->addHP(mobArray[i].getHealthLoot());//add gets
+			addStats->addDef(mobArray[i].getDefenceLoot());
+			addStats->addAtk(mobArray[i].getAttackLoot());
 			int tempcounter = 0;
-			for(int j = 0; j < mobArrayLenth; j++){
+			for(int j = 0; j < tempMobArrayLength; j++){
 				if(j != i){
 					mobArray[tempcounter] = mobArray[j];
 					tempcounter++;
@@ -54,6 +63,22 @@ bool MobControl::checkHealth(){
 		}
 	}
 	return what;
+}
+void MobControl::smartSpawn(Player*& playerinfo, Map*& mapChecker){
+	int x;
+	int y;
+	playerinfo->playerPosition(&x,&y);
+	int idealx = rand() % 40 + (x - 20);
+	int idealy = rand() % 30 + (y - 15);
+	char** mobLook = new char *[MOB_HEIGHT];
+	mobLook[0] = new char[MOB_WIDTH];
+	mobLook[0][0] = 'M';
+	mobLook[0][1] = 'M';
+	mobLook[0][2] = 'M';
+	if(mobArrayLenth < 13 && mapChecker->testBorder(idealx, idealy, 3, 1, mobLook)){
+		mobArray[mobArrayLenth].creatingMob(idealx, idealy, playerinfo);
+		mobArrayLenth++;
+	}
 }
 MobControl::~MobControl() {
 	// TODO Auto-generated destructor stub

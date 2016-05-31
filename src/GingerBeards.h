@@ -14,7 +14,7 @@
 const int STR_IN_CHAR_LENGTH = (VIEWPORT_WIDTH + 1) * VIEWPORT_HEIGHT;
 const int FONT_SIZE = 12;
 const char EMPTY = ' ';
-const int GAME_DELAY_MS = 32;
+const int GAME_DELAY_MS = 32; //do don't change
 
 class GingerBeards{
 public:

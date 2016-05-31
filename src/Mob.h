@@ -14,10 +14,18 @@ const int MOB_HEIGHT = 1, MOB_WIDTH = 3;
 
 class Mob {
 public:
-	void creatingMob(int, int);
+	void creatingMob(int, int, Player*&);
 	void mobMovement(Map*&, Player*&);
 	void detectDamage(Map*&);
 	int getHealth();
+	int RTD(int , int );
+	void setLook(int);
+	void setStats(int, int, Player*&);
+//	void setStats(Player*&, int);
+	int getHealthLoot();
+	int getDefenceLoot();
+	int getAttackLoot();
+	int getHealthAddLoot();
 	Mob();
 	~Mob();
 private:
@@ -31,6 +39,11 @@ private:
 	int speed;
 	int viewDistance;
 	bool aggressive;
+	int defenceLoot;
+	int attackLoot;
+	int healthLoot;
+	int healthAddLoot;
+	char** mobLook;
 };
 
 #endif /* SRC_MOB_H_ */

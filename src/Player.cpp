@@ -27,14 +27,16 @@ Player::Player() {
 	playerLook[2][1] = EMPTY;
 	playerLook[2][2] = '\\';
 
-	xposition = 5;
-	yposition = 25;
+	xposition = 398;
+	yposition = 162;
 	attackCounter = 0;
 	attackDir = 8;
-	maxHP = 512;
-	HP = 256;
+	maxHP = 600;
+	HP = 500;
 	defense = 1;
-	attackStrength = 3;
+	attackStrength = 10;
+	healPerSec = 1;
+	healDelaySec = 0;
 }
 
 void Player::playerMovement(int keypressed, Map*& mapEditor) {
@@ -73,13 +75,17 @@ void Player::playerMovement(int keypressed, Map*& mapEditor) {
 		xposition = tempx;
 		yposition = tempy;
 	}
-
 }
 
-void Player::heal(int amount) {
-	if (!isDead && HP < maxHP) {
-		HP += amount;
+void Player::heal() {
+	if(healDelaySec <= 0){
+		if (!isDead) {
+			HP = min(maxHP, HP + healPerSec);
+		}
+	}else{
+		healDelaySec--;
 	}
+
 }
 
 bool Player::hasDied() {
@@ -91,6 +97,7 @@ bool Player::damage(int amount) {
 	if (amount <= defense)
 		return true;
 	HP -= amount - defense;
+	healDelaySec = 2 * 1000/GAME_DELAY_MS;
 	if (HP <= 0) {
 		cout << "You've met with a terrible fate." << endl;
 		playerLook[0][0] = 'x';
@@ -136,9 +143,23 @@ int Player::getAttackStrength() {
 int Player::getDefense() {
 	return defense;
 }
+void Player::addHP(int amount) {
+	int max = maxHP - HP;
+		if(max <= amount){
+			this->HP = maxHP;
+		}else{
+			this->HP = HP + amount;
+		}
+}
+void Player::addDef(int def) {
+	this->defense += def;
+}
+void Player::addAtk(int atk) {
+	this->attackStrength += atk;
+}
 
-void Player::setHP(int HP) {
-	this->HP = HP;
+void Player::setHP(int amount) {
+	this->HP = amount;
 }
 
 void Player::teleport(int x, int y) {

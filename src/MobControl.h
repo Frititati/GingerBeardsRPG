@@ -14,10 +14,12 @@ public:
 	MobControl();
 	virtual ~MobControl();
 	void moveMobs(Map*, Player*);
-	bool checkHealth();
+	bool checkHealth(Player*&);
 	void completeAI(Map*&, Player*&);
+	void smartSpawn(Player*&, Map*&);
 private:
 	int mobArrayLenth;
+	int counter;
 };
 
 #endif /* SRC_MOBCONTROL_H_ */

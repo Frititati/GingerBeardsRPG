@@ -133,10 +133,10 @@ void GingerBeards::gameLoop() {
 		tempgingerbeards->checkForGameInput();
 		int xplay, yplay;
 		firstPlayer->playerPosition(&xplay, &yplay);
-		firstPlayer->heal(1);
 		mapConstructor->mapViewPort(xplay, yplay);
 		mobs->completeAI(refMap, firstPlayer);
 		firstPlayer->draw(refMap);
+//		firstPlayer->heal();
 		mapConstructor->drawStatsBar(firstPlayer->getMaxHP(),
 				firstPlayer->getHP(), firstPlayer->getAttackStrength(),
 				firstPlayer->getDefense());
