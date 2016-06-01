@@ -17,6 +17,7 @@ public:
 	bool checkHealth(Player*&);
 	void completeAI(Map*&, Player*&);
 	void smartSpawn(Player*&, Map*&);
+	void smartDespawn();
 private:
 	int mobArrayLenth;
 	int counter;

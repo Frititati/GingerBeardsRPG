@@ -25,6 +25,7 @@ public:
 	void teleport(int, int);
 	bool damage(int);
 	void attack(int);
+	void setMaxHP(int);
 	Player();
 private:
 	int xposition;

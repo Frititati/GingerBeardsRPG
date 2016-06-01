@@ -27,7 +27,7 @@ Player::Player() {
 	playerLook[2][1] = EMPTY;
 	playerLook[2][2] = '\\';
 
-	xposition = 398;
+	xposition = 396;
 	yposition = 162;
 	attackCounter = 0;
 	attackDir = 8;
@@ -160,6 +160,10 @@ void Player::addAtk(int atk) {
 
 void Player::setHP(int amount) {
 	this->HP = amount;
+}
+
+void Player::setMaxHP(int amount){
+	this->maxHP = amount;
 }
 
 void Player::teleport(int x, int y) {

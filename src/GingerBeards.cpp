@@ -136,7 +136,7 @@ void GingerBeards::gameLoop() {
 		mapConstructor->mapViewPort(xplay, yplay);
 		mobs->completeAI(refMap, firstPlayer);
 		firstPlayer->draw(refMap);
-//		firstPlayer->heal();
+		firstPlayer->heal();
 		mapConstructor->drawStatsBar(firstPlayer->getMaxHP(),
 				firstPlayer->getHP(), firstPlayer->getAttackStrength(),
 				firstPlayer->getDefense());

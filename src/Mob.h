@@ -26,6 +26,7 @@ public:
 	int getDefenceLoot();
 	int getAttackLoot();
 	int getHealthAddLoot();
+	bool despawnCheck();
 	Mob();
 	~Mob();
 private:

@@ -54,10 +54,12 @@ void Mob::creatingMob(int x, int y, Player*& player) {
 	attackLoot = 0;
 	healthLoot = 0;
 	healthAddLoot = 0;
+
+
 	int difficulty;
-	difficulty = player->getDefense();
-	difficulty =+ (player->getAttackStrength()*2);
-	difficulty =+ (player->getMaxHP()/3);
+	difficulty = (player->getDefense()*3);
+	difficulty =+ (player->getAttackStrength()*10);
+	difficulty =+ (player->getMaxHP()/2);
 	difficulty = difficulty/3;
 	speedCount = 0;
 	int type = RTD(1,100);
@@ -119,7 +121,7 @@ void Mob::setStats(int difficulty, int monster, Player*& playerLoot){
 			defenceLoot = 4;
 		}
 	break;
-	case 5: //ang
+	case 5: //spi
 		hp = difficulty/4;
 		attackStrength = difficulty/8;// difficulty->getHP()/15;
 		speed = 4;
@@ -131,7 +133,7 @@ void Mob::setStats(int difficulty, int monster, Player*& playerLoot){
 			healthAddLoot = 20;
 		}
 	break;
-	case 6: //god
+	case 6: //lic
 		hp = difficulty;
 		attackStrength = difficulty/5;//difficulty->getHP()/20;
 		speed = 7;
@@ -224,14 +226,14 @@ void Mob::setLook(int whichone){
 			mobLook[0][2] = 'M';
 		break;
 		case 5:
-			mobLook[0][0] = 'A';
-			mobLook[0][1] = 'N';
-			mobLook[0][2] = 'G';
+			mobLook[0][0] = 'S';
+			mobLook[0][1] = 'P';
+			mobLook[0][2] = 'I';
 		break;
 		case 6:
-			mobLook[0][0] = 'G';
-			mobLook[0][1] = 'O';
-			mobLook[0][2] = 'D';
+			mobLook[0][0] = 'L';
+			mobLook[0][1] = 'I';
+			mobLook[0][2] = 'C';
 		break;
 	}
 }
@@ -304,9 +306,9 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer){
 		}
 	}
 	nomovement: mapEditor->drawCharacter(xpossition, ypossition, MOB_WIDTH, MOB_HEIGHT, mobLook);
-	if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
+//	if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
 		detectDamage(mapEditor);
-	}
+//	}
 	speedCount++;
 }
 
@@ -325,9 +327,16 @@ void Mob::detectDamage(Map*& mapChecker){
 			case '9':
 			break;
 			}
-			break;
+			return;
 		}
 	}
+}
+
+bool Mob::despawnCheck(){
+	if((pow(differencex,2) + pow(differencey,2)) > 3600){
+		return true;
+	}
+	return false;
 }
 
 int Mob::getHealth(){
