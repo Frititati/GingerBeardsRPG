@@ -6,10 +6,10 @@
 #include <tgmath.h>
 using namespace std;
 
-char mapInChar[MAP_ROWS][MAP_COLUMNS];
+char mapInChar[MAP_HEIGHT][MAP_WIDTH];
 char mapInCharEditable[VIEWPORT_HEIGHT][VIEWPORT_WIDTH];
-char borderInChar[MAP_ROWS][MAP_COLUMNS];
-char borderInCharRestore[MAP_ROWS][MAP_COLUMNS];
+char borderInChar[MAP_HEIGHT][MAP_WIDTH];
+char borderInCharRestore[MAP_HEIGHT][MAP_WIDTH];
 
 int viewportX, viewportY;
 
@@ -17,12 +17,10 @@ void Map::mapInCharFunc() {
 	string line;
 	ifstream myfile("map4.txt");
 	if (myfile.is_open()) {
-		int a = 0;
-		while (getline(myfile, line)) {
-			for (unsigned int i = 0; i < line.length(); i++) {
-				mapInChar[a][i] = line.at(i);
+		for (int i = 0; i < MAP_HEIGHT && getline(myfile, line); i++) {
+			for (unsigned int j = 0; j < MAP_WIDTH; j++) {
+				mapInChar[i][j] = line.at(j);
 			}
-			a++;
 		}
 		myfile.close();
 	} else {
@@ -56,8 +54,8 @@ void Map::mapViewPort(int x, int y) {
 		int absoluteY = viewportY + yi;
 		for (int xi = 0; xi < VIEWPORT_WIDTH; xi++) {
 			int absoluteX = viewportX + xi;
-			if (absoluteY < 0 || absoluteX < 0 || absoluteY >= MAP_ROWS
-					|| absoluteX >= MAP_COLUMNS) {
+			if (absoluteY < 0 || absoluteX < 0 || absoluteY >= MAP_HEIGHT
+					|| absoluteX >= MAP_WIDTH) {
 				mapInCharEditable[yi][xi] = '-';
 			} else {
 				mapInCharEditable[yi][xi] = mapInChar[absoluteY][absoluteX];
@@ -77,18 +75,20 @@ void Map::getStrInChar(char* strInChar) {
 
 void Map::borderInstantion() {
 	borderInCharFunc();
-	std::copy(&borderInChar[0][0], &borderInChar[0][0] + MAP_ROWS * MAP_COLUMNS,
+	std::copy(&borderInChar[0][0], &borderInChar[0][0] + MAP_HEIGHT * MAP_WIDTH,
 			&borderInCharRestore[0][0]);
 }
 
 bool Map::testBorder(int x, int y, int width, int height, char** look) {
-	if((x >= MAP_COLUMNS) || (x < 0) || (y >= MAP_ROWS) || (y < 0)){
+	if((x >= MAP_WIDTH) || (x < 0) || (y >= MAP_HEIGHT) || (y < 0)){
 		return false;
 	}
-	int widthHelper = width / 2, heightHelper = height / 2;
-	for (int i = y - heightHelper, li = 0; i <= y + heightHelper; i++, li++) {
-		for (int j = x - widthHelper, lj = 0; j <= x + widthHelper; j++, lj++) {
-			if (look[li][lj] != EMPTY && borderInChar[i][j] == '1') {
+	cout << "Map::testBorder1" << endl;
+	for (int i = y - height / 2, looki = 0; looki < height; i++, looki++) {
+		cout << "Map::testBorder2" << endl;
+		for (int j = x - width / 2, lookj = 0; lookj < width; j++, lookj++) {
+			cout << "Map::testBorder3" << endl;
+			if (look[looki][lookj] != EMPTY && borderInChar[i][j] == '1') {
 				return false;
 			}
 		}
@@ -97,7 +97,7 @@ bool Map::testBorder(int x, int y, int width, int height, char** look) {
 }
 
 void Map::refreshEditLayer() {
-	std::copy(&mapInChar[0][0], &mapInChar[0][0] + MAP_ROWS * MAP_COLUMNS,
+	std::copy(&mapInChar[0][0], &mapInChar[0][0] + MAP_HEIGHT * MAP_WIDTH,
 			&mapInCharEditable[0][0]);
 }
 
@@ -127,7 +127,7 @@ void Map::drawCharacter(int x, int y, int drawWidth, int drawHeight,
 }
 
 void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentDefense) {
-	int innerWidth = HEALTHBAR_WIDTH - 2;
+	const int innerWidth = HEALTHBAR_WIDTH - 2;
 	int numberOfBars = round((float) currentHP / maxHP * innerWidth);
 	// draw attack and defense
 	int j = drawStat(0, currentAttack, "Attack: ", 8);
@@ -234,7 +234,7 @@ void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i,
 
 void Map::restoreBorder() {
 	std::copy(&borderInCharRestore[0][0],
-			&borderInCharRestore[0][0] + MAP_ROWS * MAP_COLUMNS,
+			&borderInCharRestore[0][0] + MAP_HEIGHT * MAP_WIDTH,
 			&borderInChar[0][0]);
 }
 

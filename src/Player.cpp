@@ -85,7 +85,6 @@ void Player::heal() {
 	}else{
 		healDelaySec--;
 	}
-
 }
 
 bool Player::hasDied() {
@@ -94,12 +93,10 @@ bool Player::hasDied() {
 
 // true if the player still lives
 bool Player::damage(int amount) {
-	if (amount <= defense)
-		return true;
-	HP -= amount - defense;
+	int damage = amount <= defense ? 1 : amount - defense;
+	HP -= damage;
 	healDelaySec = 2 * 1000/GAME_DELAY_MS;
 	if (HP <= 0) {
-		cout << "You've met with a terrible fate." << endl;
 		playerLook[0][0] = 'x';
 		playerLook[0][2] = 'x';
 		isDead = true;

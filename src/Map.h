@@ -9,10 +9,10 @@
 #define MAP_H_
 #include <string.h>
 
-const int XINCREASE = 45, YINCREASE = 15;
+const int XINCREASE = 72, YINCREASE = 18;
 const int VIEWPORT_WIDTH = 2 * XINCREASE + 1;
 const int VIEWPORT_HEIGHT = 2 * YINCREASE + 1;
-const int MAP_ROWS = 181, MAP_COLUMNS= 400;
+const int MAP_HEIGHT = 181, MAP_WIDTH= 400;
 const int DIGITS = 5;
 const int HEALTHBAR_WIDTH = 41;
 

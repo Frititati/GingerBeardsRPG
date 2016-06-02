@@ -24,7 +24,10 @@ public:
 	void setMessage(char*, int);
 	void inGame();
 	void notInGame();
+	void endScreen(char*);
 private:
+	void clearScreen();
+	void drawOptions();
 	int cursor;
 	char* message;
 	int messageLength;

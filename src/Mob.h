@@ -9,12 +9,15 @@
 #define SRC_MOB_H_
 #include "Map.h"
 #include "Player.h"
+#include "GingerBeards.h"
 
 const int MOB_HEIGHT = 1, MOB_WIDTH = 3;
+const int BOSS_HEIGHT = 5, BOSS_WIDTH = 9;
 
 class Mob {
 public:
 	void creatingMob(int, int, Player*&);
+	void createBoss(int, int);
 	void mobMovement(Map*&, Player*&);
 	void detectDamage(Map*&);
 	int getHealth();
@@ -30,8 +33,9 @@ public:
 	Mob();
 	~Mob();
 private:
-	int xpossition;
-	int ypossition;
+	int xposition;
+	int yposition;
+	int height, width;
 	int differencex;
 	int differencey;
 	int hp;

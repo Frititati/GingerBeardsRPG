@@ -13,6 +13,7 @@ Menu* menu = new Menu();
 Map* mapConstructor;
 GingerBeards* tempgingerbeards = new GingerBeards();
 Player* firstPlayer;
+Mob* boss;
 MobControl* mobs;
 
 bool isGameRunning = false;
@@ -22,7 +23,7 @@ char textToBePrinted[STR_IN_CHAR_LENGTH];
 long lfHeight = tempgingerbeards->computeFontHeight();
 
 enum GameState {
-	MAIN_MENU, IN_GAME, LOAD_GAME, QUIT
+	MAIN_MENU, IN_GAME, LOAD_GAME, THE_END, QUIT
 };
 
 enum GameState gameState = MAIN_MENU;
@@ -79,7 +80,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	}
 
 	window = CreateWindowEx(
-	WS_EX_CLIENTEDGE, g_szClassName, "ASCII RPG",
+	WS_EX_CLIENTEDGE, g_szClassName, "A Ginger Tale",
 	WS_OVERLAPPEDWINDOW, 50, 100, 900, 700,
 	NULL, NULL, hInstance, NULL);
 
@@ -96,13 +97,23 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		stateShift = false;
 		switch (gameState) {
 		case MAIN_MENU:
+			cout << "main_MAIN_MENU1" << endl;
 			tempgingerbeards->menuLoop();
 			break;
 		case IN_GAME:
 			tempgingerbeards->gameLoop();
 			break;
+		case THE_END:
+			cout << "main_THE_END1" << endl;
+			menu->endScreen(textToBePrinted);
+			tempgingerbeards->draw(window);
+			isGameRunning = false;
+			gameState = MAIN_MENU;
+			while (!stateShift && !GetAsyncKeyState(0x43)) { // c key
+				cout << "main_THE_END2" << endl;
+				tempgingerbeards->peekMessage();
+			}
 		}
-
 	}
 
 	return Msg.wParam;
@@ -137,11 +148,18 @@ void GingerBeards::gameLoop() {
 		mobs->completeAI(refMap, firstPlayer);
 		firstPlayer->draw(refMap);
 		firstPlayer->heal();
+		cout << "GingerBeards::gameLoop1" << endl;
+		boss->mobMovement(refMap, firstPlayer);
+		cout << "GingerBeards::gameLoop2" << endl;
 		mapConstructor->drawStatsBar(firstPlayer->getMaxHP(),
 				firstPlayer->getHP(), firstPlayer->getAttackStrength(),
 				firstPlayer->getDefense());
 		mapConstructor->getStrInChar(textToBePrinted);
 		tempgingerbeards->draw(window);
+		if (boss->getHealth() < 1) {
+			gameState = THE_END;
+			stateShift = true;
+		}
 		if (firstPlayer->hasDied()) {
 			isGameRunning = false;
 		}
@@ -188,6 +206,8 @@ void GingerBeards::draw(HWND window) {
 void GingerBeards::setupGame() {
 	mapConstructor = new Map();
 	firstPlayer = new Player();
+	boss = new Mob();
+	boss->createBoss(273, 18);
 	mobs = new MobControl();
 	tempgingerbeards->mapFirstRefresh();
 	isGameRunning = true;
@@ -198,7 +218,7 @@ void GingerBeards::checkForMenuInput() {
 		menu->cursorUp();
 	} else if (GetAsyncKeyState(VK_DOWN)) {
 		menu->cursorDown();
-	} else if (GetAsyncKeyState(0x0D)) {
+	} else if (GetAsyncKeyState(0x0D)) {	// carriage return
 		switch (menu->getSelectedItem()) {
 		case 0:	// new game
 			setupGame();
@@ -206,19 +226,10 @@ void GingerBeards::checkForMenuInput() {
 			gameState = IN_GAME;
 			break;
 		case 1:	// continue
-//			if (!isGameRunning) {
-//				menu->setMessage("Please load or start a new game first :)",
-//						40);
-//			} else {
-				stateShift = true;
-				gameState = IN_GAME;
-//			}
+			stateShift = true;
+			gameState = IN_GAME;
 			break;
 		case 2: // save
-//			if (!tempgingerbeards->saveGame()) {
-//				menu->setMessage("Please, load or start a new game first >.<",
-//						41);
-//			}
 			tempgingerbeards->saveGame();
 			break;
 		case 3: // load
@@ -305,6 +316,8 @@ void GingerBeards::mapFirstRefresh() {
 	mapConstructor->mapInstantiation();
 	mapConstructor->borderInstantion();
 }
+
+
 //void GingerBeards::playerMovement(int keypressed){
 //	playerLook[0] = '(';
 //	playerLook[1] = '"';
