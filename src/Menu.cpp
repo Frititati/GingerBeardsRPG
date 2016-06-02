@@ -8,6 +8,7 @@
 #include "Map.h"
 #include "Menu.h"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -26,7 +27,6 @@ Menu::Menu() {
 void Menu::inGame() {
 	cursor = 0;
 	numberOfOptions = 5;
-	topmostOption = VIEWPORT_HEIGHT / 2 - 2;
 	optionsLength = new int[5];
 	options = new char *[5];
 	codes = new int[5];
@@ -48,7 +48,6 @@ void Menu::inGame() {
 void Menu::notInGame() {
 	cursor = 0;
 	numberOfOptions = 3;
-	topmostOption = VIEWPORT_HEIGHT / 2 - 1;
 	options = new char *[3];
 	optionsLength = new int[3];
 	codes = new int[3];
@@ -111,9 +110,39 @@ int Menu::getSelectedItem() {
 	return codes[cursor];
 }
 
+void Menu::instructionsScreen(char* strInChar) {
+	string line;
+	ifstream myfile("instructions.txt");
+	if (myfile.is_open()) {
+		int i;
+		const int INSTRUCTIONS_LIMIT = 100;
+		options = new char *[INSTRUCTIONS_LIMIT];
+		optionsLength = new int [INSTRUCTIONS_LIMIT];
+		cout << "Menu::instructionsScreen1" << endl;
+		for (i = 0; getline(myfile, line); i++) {
+			cout << i << endl;
+			optionsLength[i] = line.length();
+			options[i] = new char [line.length()];
+			for (unsigned int j = 0; j < line.length(); j++) {
+				cout << j << endl;
+				options[i][j] = line.at(j);
+			}
+		}
+		myfile.close();
+		numberOfOptions = i;
+		clearScreen();
+		cout << "Menu::instructionsScreen2" << endl;
+		drawOptions();
+		cout << "Menu::instructionsScreen3" << endl;
+		getStrInChar(strInChar);
+	} else {
+		cout << "Unable to open file" << endl;
+	}
+}
+
 void Menu::endScreen(char* strInChar) {
 	numberOfOptions = 11;
-	topmostOption = VIEWPORT_HEIGHT / 2 - numberOfOptions / 2;
+
 	optionsLength = new int[numberOfOptions];
 	options = new char *[numberOfOptions];
 	options[0] = "The End.";
@@ -155,12 +184,17 @@ void Menu::clearScreen() {
 }
 
 void Menu::drawOptions() {
+	topmostOption = VIEWPORT_HEIGHT / 2 - numberOfOptions / 2;
+	cout << "Menu::drawOptions1" << endl;
 	for (int i = topmostOption, ki = 0; ki < numberOfOptions; ki++, i++) {
 		int length = optionsLength[ki];
+		cout << ki << endl;
 		for (int j = VIEWPORT_WIDTH / 2 - length / 2, kj = 0; kj < length;
 				kj++, j++) {
+			cout << kj << endl;
 			screen[i][j] = options[ki][kj];
 		}
 	}
+	cout << "Menu::drawOptions2" << endl;
 }
 

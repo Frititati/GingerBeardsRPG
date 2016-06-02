@@ -106,12 +106,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		case THE_END:
 			cout << "main_THE_END1" << endl;
 			menu->endScreen(textToBePrinted);
-			tempgingerbeards->draw(window);
 			isGameRunning = false;
 			gameState = MAIN_MENU;
 			while (!stateShift && !GetAsyncKeyState(0x43)) { // c key
 				cout << "main_THE_END2" << endl;
 				tempgingerbeards->peekMessage();
+				tempgingerbeards->draw(window);
+				Sleep(MENU_DELAY_MS);
 			}
 		}
 	}
@@ -129,8 +130,8 @@ void GingerBeards::menuLoop() {
 	}
 	while (!stateShift) {
 		tempgingerbeards->peekMessage();
-		tempgingerbeards->checkForMenuInput();
 		menu->draw();
+		tempgingerbeards->checkForMenuInput();
 		menu->getStrInChar(textToBePrinted);
 		tempgingerbeards->draw(window);
 		Sleep(MENU_DELAY_MS);
@@ -222,8 +223,17 @@ void GingerBeards::checkForMenuInput() {
 		switch (menu->getSelectedItem()) {
 		case 0:	// new game
 			setupGame();
-			stateShift = true;
+			cout << "GingerBeards::checkForMenuInput1" << endl;
+			menu->instructionsScreen(textToBePrinted);
 			gameState = IN_GAME;
+			cout << "GingerBeards::checkForMenuInput2" << endl;
+			while (!stateShift && !GetAsyncKeyState(0x43)) {
+				peekMessage();
+				tempgingerbeards->draw(window);
+				Sleep(MENU_DELAY_MS);
+			}
+			cout << "GingerBeards::checkForMenuInput3" << endl;
+			stateShift = true;
 			break;
 		case 1:	// continue
 			stateShift = true;
@@ -316,7 +326,6 @@ void GingerBeards::mapFirstRefresh() {
 	mapConstructor->mapInstantiation();
 	mapConstructor->borderInstantion();
 }
-
 
 //void GingerBeards::playerMovement(int keypressed){
 //	playerLook[0] = '(';

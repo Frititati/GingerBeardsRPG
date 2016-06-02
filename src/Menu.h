@@ -25,6 +25,7 @@ public:
 	void inGame();
 	void notInGame();
 	void endScreen(char*);
+	void instructionsScreen(char*);
 private:
 	void clearScreen();
 	void drawOptions();
