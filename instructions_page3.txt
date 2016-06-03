@@ -1,13 +1,27 @@
-~ Goal ~
+~ Combat ~
 
+Your health will regenerate if you don't get hit for a while
 
-Find and defeats this bad guy!
+Rewards for slaining monsters: 
 
-  [***]  
-8)O|||O(8
-8)O|||O(8
-8)O|||O(8
-8)O|||O(8
+IMP               + Health                          
+GOB               + Health                          
+VAM               + Attack                          
+ZOM               + Defense                         
+SPI               + Max Health                      
+LIC               + Attack, Health, Max Power (rare)
 
+q - unleash the Ginger Power. Depletes the power bar. 
+Damage and area of effect depends on the number of charges
+
+   ~~~   
+  ~~~~~  
+ ~~~~~~~ 
+~~~>_>~~~
+~~~/|\~~~
+~~~/~\~~~
+ ~~~~~~~ 
+  ~~~~~  
+   ~~~   
 
 Press 'c' to continue

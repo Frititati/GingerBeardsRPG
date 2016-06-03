@@ -277,9 +277,9 @@ bool GingerBeards::saveGame() {
 
 void GingerBeards::intro() {
 	char pages[][25] = { "instructions_page1.txt", "instructions_page2.txt",
-			"instructions_page3.txt" };
+			"instructions_page3.txt", "instructions_page4.txt" };
 	//cout << "GingerBeards::checkForMenuInput1" << endl;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		menu->readPage(textToBePrinted, pages[i]);
 		//cout << "GingerBeards::checkForMenuInput2" << endl;
 		while (!GetAsyncKeyState(0x43)) {

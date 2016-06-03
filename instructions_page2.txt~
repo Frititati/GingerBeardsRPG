@@ -5,7 +5,7 @@ Use the arrow keys to move Filippo around the world
 w
 
  | 
- T
+ T 
 >_<
 /| 
 / \
@@ -23,8 +23,16 @@ s
 
 Your health will regenerate if you don't get hit for a while
 
-Slaining monsters will sometime raise your attack, defense or maximum health
+Rewards for slaining monsters: 
 
-q - Ginger power
+IMP  + Health
+GOB  + Health
+VAM  + Attack
+ZOM  + Defense
+SPI  + Max Health
+LIC  + Attack, Health, Max Power (rare)
+
+q - unleash the Ginger Power. Depletes the power bar. Damage and area of
+effect depends on the number of charges
 
 Press 'c' to continue

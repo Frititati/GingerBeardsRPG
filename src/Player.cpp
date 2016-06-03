@@ -338,11 +338,12 @@ void Player::AOEAttack() {
 			chargePower = false;	// avoid that the player overuses the special ability
 			playerLook[2][1] = AOE_CHAR;
 			aoeDamage = (int) attackStrength * (0.5 + 0.1 * power);
+			aoeRadius = AOE_RADIUS + power / 3;
 			power = 0;
-			attackCounter = (attackCounter + 1) % AOE_RADIUS;
+			attackCounter = 1;
 		}
 	} else {
-		attackCounter = (attackCounter + 1) % AOE_RADIUS;
+		attackCounter = (attackCounter + 1) % aoeRadius;
 	}
 	int topLeftX = xposition - PLAYER_WIDTH / 2;
 	int topLeftY = yposition - PLAYER_HEIGHT / 2;

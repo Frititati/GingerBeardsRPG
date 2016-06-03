@@ -13,6 +13,8 @@
 
 const int MOB_HEIGHT = 1, MOB_WIDTH = 3;
 const int BOSS_HEIGHT = 5, BOSS_WIDTH = 9;
+const int BOSS_MAX_HP = 5000;
+const int BOSS_HEAL_RATE = 5;
 
 class Mob {
 public:

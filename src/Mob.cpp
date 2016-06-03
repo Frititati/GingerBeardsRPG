@@ -16,6 +16,8 @@ using namespace std;
 
 Player* playerposition;
 
+bool isBoss = false;
+
 Mob::Mob() {
 	hp = 17;
 	attackStrength = 15;
@@ -53,12 +55,13 @@ void Mob::createBoss(int x, int y) {
 		}
 		myfile.close();
 		// boss' stats
+		isBoss = true;
 		xposition = x;
 		yposition = y;
 		width = BOSS_WIDTH;
 		height = BOSS_HEIGHT;
-		hp = 100;
-		attackStrength = 9;
+		hp = BOSS_MAX_HP;
+		attackStrength = 80;
 		speed = 3;
 		viewDistance = 400;
 		healthLoot = 2000;
@@ -173,7 +176,7 @@ void Mob::setStats(int difficulty, int monster, Player*& playerLoot) {
 		healthAddLoot = playerLoot->getMaxHP() / 20;
 		attackLoot = 6;
 		int bonusPower = RTD(1, 100);
-		if (bonusPower < 16) {
+		if (bonusPower < 5) {
 			maxPowerAddLoot = 1;
 		}
 		break;
@@ -311,6 +314,9 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer) {
 			}
 		} else {
 			int randomMovement = rand() % 100;
+			if (isBoss) {
+				hp = min(hp + BOSS_HEAL_RATE, BOSS_MAX_HP);
+			}
 			if (randomMovement < 50) {
 				if (randomMovement < 25) {
 					xposition++;

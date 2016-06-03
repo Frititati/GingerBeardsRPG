@@ -56,6 +56,7 @@ private:
 	int power;
 	int maxPower;
 	int aoeDamage;
+	int aoeRadius;
 };
 
 #endif /* PLAYER_H_ */
