@@ -5,7 +5,7 @@ Use the arrow keys to move Filippo around the world
 w
 
  | 
- T
+ T 
 >_<
 /| 
 / \

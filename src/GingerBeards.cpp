@@ -1,5 +1,5 @@
-#include "gingerbeards.h"
-#include "player.h"
+#include "Gingerbeards.h"
+#include "Player.h"
 #include "mobcontrol.h"
 #include <iostream>
 #include <fstream>
@@ -97,19 +97,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		stateShift = false;
 		switch (gameState) {
 		case MAIN_MENU:
-			cout << "main_MAIN_MENU1" << endl;
+			//cout << "main_MAIN_MENU1" << endl;
 			tempgingerbeards->menuLoop();
 			break;
 		case IN_GAME:
 			tempgingerbeards->gameLoop();
 			break;
 		case THE_END:
-			cout << "main_THE_END1" << endl;
+			//cout << "main_THE_END1" << endl;
 			menu->endScreen(textToBePrinted);
 			isGameRunning = false;
 			gameState = MAIN_MENU;
 			while (!stateShift && !GetAsyncKeyState(0x43)) { // c key
-				cout << "main_THE_END2" << endl;
+				//cout << "main_THE_END2" << endl;
 				tempgingerbeards->peekMessage();
 				tempgingerbeards->draw(window);
 				Sleep(MENU_DELAY_MS);
@@ -150,9 +150,9 @@ void GingerBeards::gameLoop() {
 		mobs->completeAI(refMap, firstPlayer);
 		firstPlayer->draw(refMap);
 		firstPlayer->heal();
-		cout << "GingerBeards::gameLoop1" << endl;
+		//cout << "GingerBeards::gameLoop1" << endl;
 		boss->mobMovement(refMap, firstPlayer);
-		cout << "GingerBeards::gameLoop2" << endl;
+		//cout << "GingerBeards::gameLoop2" << endl;
 		mapConstructor->drawStatsBar(firstPlayer->getMaxHP(),
 				firstPlayer->getHP(), firstPlayer->getAttackStrength(),
 				firstPlayer->getDefense(), firstPlayer->getPower(),
@@ -278,10 +278,10 @@ bool GingerBeards::saveGame() {
 void GingerBeards::intro() {
 	char pages[][25] = { "instructions_page1.txt", "instructions_page2.txt",
 			"instructions_page3.txt" };
-	cout << "GingerBeards::checkForMenuInput1" << endl;
+	//cout << "GingerBeards::checkForMenuInput1" << endl;
 	for (int i = 0; i < 3; i++) {
 		menu->readPage(textToBePrinted, pages[i]);
-		cout << "GingerBeards::checkForMenuInput2" << endl;
+		//cout << "GingerBeards::checkForMenuInput2" << endl;
 		while (!GetAsyncKeyState(0x43)) {
 			if (stateShift)
 				return;
@@ -291,7 +291,7 @@ void GingerBeards::intro() {
 		}
 		Sleep(MENU_DELAY_MS);
 	}
-	cout << "GingerBeards::checkForMenuInput3" << endl;
+	//cout << "GingerBeards::checkForMenuInput3" << endl;
 }
 
 bool GingerBeards::loadGame() {

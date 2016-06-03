@@ -3,7 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
-#include <tgmath.h>
+#include <math.h>
 using namespace std;
 
 char mapInChar[MAP_HEIGHT][MAP_WIDTH];
@@ -83,11 +83,11 @@ bool Map::testBorder(int x, int y, int width, int height, char** look) {
 	if ((x >= MAP_WIDTH) || (x < 0) || (y >= MAP_HEIGHT) || (y < 0)) {
 		return false;
 	}
-	cout << "Map::testBorder1" << endl;
+	//cout << "Map::testBorder1" << endl;
 	for (int i = y - height / 2, looki = 0; looki < height; i++, looki++) {
-		cout << "Map::testBorder2" << endl;
+		//cout << "Map::testBorder2" << endl;
 		for (int j = x - width / 2, lookj = 0; lookj < width; j++, lookj++) {
-			cout << "Map::testBorder3" << endl;
+			//cout << "Map::testBorder3" << endl;
 			if (look[looki][lookj] != EMPTY && borderInChar[i][j] == '1') {
 				return false;
 			}

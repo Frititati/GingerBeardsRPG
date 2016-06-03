@@ -120,13 +120,13 @@ void Menu::readPage(char* strInChar, const char* page) {
 		const int INSTRUCTIONS_LIMIT = 100;
 		options = new char *[INSTRUCTIONS_LIMIT];
 		optionsLength = new int[INSTRUCTIONS_LIMIT];
-		cout << "Menu::instructionsScreen1" << endl;
+		//cout << "Menu::instructionsScreen1" << endl;
 		for (i = 0; getline(myfile, line); i++) {
-			cout << i << endl;
+			//cout << i << endl;
 			optionsLength[i] = line.length();
 			options[i] = new char[line.length()];
 			for (unsigned int j = 0; j < line.length(); j++) {
-				cout << j << endl;
+				//cout << j << endl;
 				options[i][j] = line.at(j);
 			}
 		}
@@ -136,9 +136,9 @@ void Menu::readPage(char* strInChar, const char* page) {
 		cout << "Unable to open file" << endl;
 	}
 	clearScreen();
-	cout << "Menu::instructionsScreen2" << endl;
+	//cout << "Menu::instructionsScreen2" << endl;
 	drawOptions();
-	cout << "Menu::instructionsScreen3" << endl;
+	//cout << "Menu::instructionsScreen3" << endl;
 	getStrInChar(strInChar);
 
 }
@@ -170,11 +170,11 @@ void Menu::endScreen(char* strInChar) {
 	optionsLength[8] = 17;
 	optionsLength[9] = 0;
 	optionsLength[10] = 21;
-	cout << "Menu::endScreen1" << endl;
+	//cout << "Menu::endScreen1" << endl;
 	clearScreen();
-	cout << "Menu::endScreen1.1" << endl;
+	//cout << "Menu::endScreen1.1" << endl;
 	drawOptions();
-	cout << "Menu::endScreen2" << endl;
+	//cout << "Menu::endScreen2" << endl;
 	getStrInChar(strInChar);
 }
 
@@ -188,16 +188,16 @@ void Menu::clearScreen() {
 
 void Menu::drawOptions() {
 	topmostOption = VIEWPORT_HEIGHT / 2 - numberOfOptions / 2;
-	cout << "Menu::drawOptions1" << endl;
+	//cout << "Menu::drawOptions1" << endl;
 	for (int i = topmostOption, ki = 0; ki < numberOfOptions; ki++, i++) {
 		int length = optionsLength[ki];
-		cout << ki << endl;
+		//cout << ki << endl;
 		for (int j = VIEWPORT_WIDTH / 2 - length / 2, kj = 0; kj < length;
 				kj++, j++) {
-			cout << kj << endl;
+			//cout << kj << endl;
 			screen[i][j] = options[ki][kj];
 		}
 	}
-	cout << "Menu::drawOptions2" << endl;
+	//cout << "Menu::drawOptions2" << endl;
 }
 

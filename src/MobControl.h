@@ -7,7 +7,7 @@
 
 #ifndef SRC_MOBCONTROL_H_
 #define SRC_MOBCONTROL_H_
-#include "mob.h"
+#include "Mob.h"
 
 class MobControl {
 public:

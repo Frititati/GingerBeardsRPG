@@ -325,13 +325,13 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer) {
 				}
 			}
 		}
-		cout << "Mob::mobMovement1" << endl;
+		//cout << "Mob::mobMovement1" << endl;
 		const int LIMIT = 1000; // avoid a bad crash if the mob cannot move
 		for (int i = 0;
 				i < LIMIT
 						&& !mapEditor->testBorder(xposition, yposition, width,
 								height, mobLook); i++) {
-			cout << "Mob::mobMovement2" << endl;
+			//cout << "Mob::mobMovement2" << endl;
 			xposition = tempx;
 			yposition = tempy;
 			int randomMovement = rand() % 100;
@@ -350,12 +350,12 @@ void Mob::mobMovement(Map*& mapEditor, Player*& xyPlayer) {
 			}
 		}
 	}
-	cout << "Mob::mobMovement3" << endl;
+	//cout << "Mob::mobMovement3" << endl;
 	mapEditor->drawCharacter(xposition, yposition, width, height, mobLook);
-	cout << "Mob::mobMovement4" << endl;
+	//cout << "Mob::mobMovement4" << endl;
 //	if((pow(differencex, 2)+ pow(differencey,2)) < viewDistance){
 	detectDamage(mapEditor);
-	cout << "Mob::mobMovement5" << endl;
+	//cout << "Mob::mobMovement5" << endl;
 //	}
 	speedCount++;
 }
