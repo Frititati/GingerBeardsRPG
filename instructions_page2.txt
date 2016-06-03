@@ -25,6 +25,6 @@ Your health will regenerate if you don't get hit for a while
 
 Slaining monsters will sometime raise your attack, defense or maximum health
 
-q - Special attack
+q - Ginger power
 
 Press 'c' to continue

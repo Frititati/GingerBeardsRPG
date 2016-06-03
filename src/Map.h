@@ -9,15 +9,18 @@
 #define MAP_H_
 #include <string.h>
 
+const char OUT_OF_MAP_CHAR = '-';
+
 const int XINCREASE = 72, YINCREASE = 18;
 const int VIEWPORT_WIDTH = 2 * XINCREASE + 1;
 const int VIEWPORT_HEIGHT = 2 * YINCREASE + 1;
 const int MAP_HEIGHT = 181, MAP_WIDTH= 400;
 const int DIGITS = 5;
 const int HEALTHBAR_WIDTH = 41;
+const int POWER_CAP = 15;
 
 const char PLAYER_SWING = '6';
-const char AOE = '7';
+const char AOE_CODE = '7';
 
 class Map{
 public:
@@ -31,8 +34,9 @@ public:
 	void drawCharacter(int, int, int, int, char**);
 	void drawChar(int, int, char);
 	void drawChar(int, int, char, char);
-	void drawStatsBar(int, int, int, int);
+	void drawStatsBar(int, int, int, int, int, int);
 	void drawMenu();
+	int drawPowerBar(int, int, char*, int);
 	void refreshEditLayer();
 	void getStrInChar(char*);
 //	void getBorders(char**);

@@ -56,7 +56,7 @@ void Map::mapViewPort(int x, int y) {
 			int absoluteX = viewportX + xi;
 			if (absoluteY < 0 || absoluteX < 0 || absoluteY >= MAP_HEIGHT
 					|| absoluteX >= MAP_WIDTH) {
-				mapInCharEditable[yi][xi] = '-';
+				mapInCharEditable[yi][xi] = OUT_OF_MAP_CHAR;
 			} else {
 				mapInCharEditable[yi][xi] = mapInChar[absoluteY][absoluteX];
 			}
@@ -80,7 +80,7 @@ void Map::borderInstantion() {
 }
 
 bool Map::testBorder(int x, int y, int width, int height, char** look) {
-	if((x >= MAP_WIDTH) || (x < 0) || (y >= MAP_HEIGHT) || (y < 0)){
+	if ((x >= MAP_WIDTH) || (x < 0) || (y >= MAP_HEIGHT) || (y < 0)) {
 		return false;
 	}
 	cout << "Map::testBorder1" << endl;
@@ -126,7 +126,8 @@ void Map::drawCharacter(int x, int y, int drawWidth, int drawHeight,
 	}
 }
 
-void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentDefense) {
+void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack,
+		int currentDefense, int currentPower, int currentMaxPower) {
 	const int innerWidth = HEALTHBAR_WIDTH - 2;
 	int numberOfBars = round((float) currentHP / maxHP * innerWidth);
 	// draw attack and defense
@@ -145,7 +146,7 @@ void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentD
 	for (; i < innerWidth; i++, j++) {
 		mapInCharEditable[0][j] = ' ';
 	}
-	// go to the middle of the bar
+	// draw the middle of the bar
 	int middle = j - 1 - innerWidth / 2;
 	mapInCharEditable[0][middle] = '/';
 	for (int k = 0; k < lengthMaxHP; k++) {
@@ -156,10 +157,35 @@ void Map::drawStatsBar(int maxHP, int currentHP, int currentAttack, int currentD
 		mapInCharEditable[0][middle - lengthCurrentHP + k] = scurrentHP[k];
 	}
 	mapInCharEditable[0][j++] = ']';
+	for (int i = 0; i < DIGITS; i++, j++) {
+		mapInCharEditable[0][j] = ' ';
+	}
 
+	j = drawPowerBar(j, currentPower, "Power: ", 7);
+	j = drawStat(j, currentMaxPower, "Max Power: ", 11);
+
+	// draw the trail
 	for (; j < VIEWPORT_WIDTH; j++) {
 		mapInCharEditable[0][j] = ' ';
 	}
+}
+
+int Map::drawPowerBar(int j, int currentPower, char* label, int labelSize) {
+	// draw label
+	for (int i = 0; i < labelSize; j++, i++) {
+		mapInCharEditable[0][j] = label[i];
+	}
+	// draw power points
+	for (int i = 0; i < currentPower; i++, j++) {
+		mapInCharEditable[0][j] = '*';
+	}
+	// format power bar
+	for(int i = POWER_CAP - currentPower; i > 0; i--, j++) {
+		mapInCharEditable[0][j] = ' ';
+	}
+	// add a trailing space
+	mapInCharEditable[0][j++] = ' ';
+	return j;
 }
 
 int Map::drawStat(int j, int stat, char* label, int labelSize) {
@@ -202,7 +228,8 @@ char* Map::toChar(int i, int* length) {
 }
 
 void Map::drawChar(int x, int y, char draw) {
-	// coordinates relative to the viewport
+	if (borderInChar[y][x] == '1')
+		return;
 	int viewportRelativeX = x - viewportX;
 	int viewportRelativeY = y - viewportY;
 	mapInCharEditable[viewportRelativeY][viewportRelativeX] = draw;

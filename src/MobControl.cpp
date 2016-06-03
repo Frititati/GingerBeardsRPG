@@ -69,6 +69,8 @@ bool MobControl::checkHealth(Player*& addStats){
 			addStats->addHP(mobArray[i].getHealthLoot());//add gets
 			addStats->addDef(mobArray[i].getDefenceLoot());
 			addStats->addAtk(mobArray[i].getAttackLoot());
+			addStats->addMaxPower(mobArray[i].getPowerAddLoot());
+			addStats->increasePower();
 			int tempcounter = 0;
 			for(int j = 0; j < tempMobArrayLength; j++){
 				if(j != i){

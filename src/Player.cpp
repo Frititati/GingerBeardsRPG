@@ -8,15 +8,20 @@ char** playerLook;
 Map* mapDraw;
 
 bool isDead;
+bool chargePower;
 
 Player::Player() {
 	isDead = false;
+	chargePower = true;
 	playerLook = new char *[PLAYER_HEIGHT];
 	for (int i = 0; i < PLAYER_HEIGHT; i++) {
 		playerLook[i] = new char[PLAYER_WIDTH];
 	}
 //	(°_ʖ°)
 //	EMPTY o EMPTY
+	playerLook[0][0] = '^';
+	playerLook[0][1] = '_';
+	playerLook[0][2] = '^';
 	this->standardLook();
 	xposition = 396;
 	yposition = 162;
@@ -24,6 +29,8 @@ Player::Player() {
 	attackDir = 8;
 	maxHP = 600;
 	HP = 500;
+	power = 3;
+	maxPower = 6;
 	defense = 1;
 	attackStrength = 10;
 	healPerSec = 1;
@@ -83,6 +90,10 @@ bool Player::hasDied() {
 	return isDead;
 }
 
+int Player::getAOEDamage() {
+	return aoeDamage;
+}
+
 // true if the player still lives
 bool Player::damage(int amount) {
 	int damage = amount <= defense ? 1 : amount - defense;
@@ -105,13 +116,9 @@ void Player::playerPosition(int* x, int* y) {
 
 void Player::draw(Map*& mapEditor) {
 	mapDraw = mapEditor;
+	attack(attackDir);
 	mapEditor->drawCharacter(xposition, yposition, PLAYER_WIDTH, PLAYER_HEIGHT,
 			playerLook);
-	if (attackDir == 8) {
-		attack(8);
-	} else {
-		attack(attackDir);
-	}
 }
 void Player::setAttack(int direction) {
 	if (attackCounter == 0) {
@@ -162,234 +169,305 @@ void Player::teleport(int x, int y) {
 	yposition = y;
 }
 
+void Player::leftSwing() {
+	attackCounter = (attackCounter + 1) % 6;
+	playerLook[0][0] = '<';
+	playerLook[0][1] = '_';
+	playerLook[0][2] = '<';
+	switch (attackCounter) {
+	case 1:
+		playerLook[1][0] = INVISIBLE;
+		mapDraw->drawChar(xposition - 1, yposition + 2, '\\', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 2, yposition + 3, '/', PLAYER_SWING);
+		break;
+	case 2:
+		mapDraw->drawChar(xposition - 2, yposition + 1, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 4, yposition + 2, '/', PLAYER_SWING);
+		break;
+	case 3:
+		playerLook[1][0] = '-';
+		mapDraw->drawChar(xposition - 2, yposition, '-', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 3, yposition, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 4, yposition, '-', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 5, yposition, '-', PLAYER_SWING);
+		break;
+	case 4:
+		playerLook[1][0] = INVISIBLE;
+		mapDraw->drawChar(xposition - 2, yposition - 1, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 4, yposition - 2, '\\', PLAYER_SWING);
+		break;
+	case 5:
+		mapDraw->drawChar(xposition - 1, yposition - 2, '/', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 2, yposition - 3, '\\', PLAYER_SWING);
+	}
+}
+void Player::rightSwing() {
+	attackCounter = (attackCounter + 1) % 6;
+	playerLook[0][0] = '>';
+	playerLook[0][1] = '_';
+	playerLook[0][2] = '>';
+	switch (attackCounter) {
+	case 1:
+		playerLook[1][2] = INVISIBLE;
+		mapDraw->drawChar(xposition + 1, yposition + 2, '/', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 2, yposition + 3, '\\', PLAYER_SWING);
+		break;
+	case 2:
+		mapDraw->drawChar(xposition + 2, yposition + 1, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 4, yposition + 2, '\\', PLAYER_SWING);
+		break;
+	case 3:
+		playerLook[1][2] = '-';
+		mapDraw->drawChar(xposition + 2, yposition, '-', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 3, yposition, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 4, yposition, '-', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 5, yposition, '-', PLAYER_SWING);
+		break;
+	case 4:
+		playerLook[1][2] = INVISIBLE;
+		mapDraw->drawChar(xposition + 2, yposition - 1, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 4, yposition - 2, '/', PLAYER_SWING);
+		break;
+	case 5:
+		mapDraw->drawChar(xposition + 1, yposition - 2, '\\', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 2, yposition - 3, '/', PLAYER_SWING);
+	}
+}
+void Player::frontSwing() {
+	attackCounter = (attackCounter + 1) % 6;
+	playerLook[0][0] = '>';
+	playerLook[0][1] = '_';
+	playerLook[0][2] = '<';
+	switch (attackCounter) {
+	case 1:
+		playerLook[1][2] = INVISIBLE;
+		mapDraw->drawChar(xposition - 2, yposition - 1, '/', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 3, yposition - 2, '\\', PLAYER_SWING);
+		break;
+	case 2:
+		mapDraw->drawChar(xposition - 1, yposition - 2, '/', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 2, yposition - 3, '\\', PLAYER_SWING);
+		break;
+	case 3:
+		//			mapDraw->drawChar(xposition, yposition - 4, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition, yposition - 3, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition, yposition - 2, 'T', PLAYER_SWING);
+		break;
+	case 4:
+		mapDraw->drawChar(xposition + 1, yposition - 2, '\\', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 2, yposition - 3, '/', PLAYER_SWING);
+		break;
+	case 5:
+		mapDraw->drawChar(xposition + 2, yposition - 1, '\\', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 3, yposition - 2, '/', PLAYER_SWING);
+	}
+}
+void Player::backSwing() {
+	attackCounter = (attackCounter + 1) % 6;
+	mapDraw->restoreBorder();
+	playerLook[0][0] = '>';
+	playerLook[0][1] = '_';
+	playerLook[0][2] = '<';
+	switch (attackCounter) {
+	case 1:
+		playerLook[1][0] = '\\';
+		mapDraw->drawChar(xposition + 2, yposition + 1, '/', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 3, yposition + 2, '\\', PLAYER_SWING);
+		break;
+	case 2:
+		mapDraw->drawChar(xposition + 1, yposition + 2, '/', PLAYER_SWING);
+		mapDraw->drawChar(xposition + 2, yposition + 3, '\\', PLAYER_SWING);
+		break;
+	case 3:
+		playerLook[1][0] = '|';
+		mapDraw->drawChar(xposition, yposition + 2, '|', PLAYER_SWING);
+		mapDraw->drawChar(xposition, yposition + 3, 'T', PLAYER_SWING);
+		//			mapDraw->drawChar(xposition, yposition + 4, '|', PLAYER_SWING);
+		break;
+	case 4:
+		playerLook[1][0] = '/';
+		mapDraw->drawChar(xposition - 1, yposition + 2, '\\', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 2, yposition + 3, '-', PLAYER_SWING);
+		break;
+	case 5:
+		mapDraw->drawChar(xposition - 2, yposition + 1, '\\', PLAYER_SWING);
+		mapDraw->drawChar(xposition - 3, yposition + 2, '/', PLAYER_SWING);
+	}
+}
+
+// hard coded
 void Player::attack(int direction) {
 	if (isDead)
 		return;
 	if (direction == 1) { //a
-		attackCounter++;
-		switch (attackCounter) {
-		case 1:
-			playerLook[1][0] = INVISIBLE;
-			playerLook[0][0] = '<';
-			playerLook[0][1] = '_';
-			playerLook[0][2] = '<';
-			mapDraw->drawChar(xposition - 1, yposition + 2, '\\', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 2, yposition + 3, '/', PLAYER_SWING);
-			break;
-		case 2:
-			mapDraw->drawChar(xposition - 2, yposition + 1, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 4, yposition + 2, '/', PLAYER_SWING);
-			break;
-		case 3:
-			playerLook[1][0] = '-';
-			mapDraw->drawChar(xposition - 2, yposition, '-', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 3, yposition, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 4, yposition, '-', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 5, yposition, '-', PLAYER_SWING);
-			break;
-		case 4:
-			playerLook[1][0] = INVISIBLE;
-			mapDraw->drawChar(xposition - 2, yposition - 1, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 4, yposition - 2, '\\', PLAYER_SWING);
-			break;
-		case 5:
-			mapDraw->drawChar(xposition - 1, yposition - 2, '/', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 2, yposition - 3, '\\', PLAYER_SWING);
-			break;
-		case 6:
-			attackCounter = 0;
-			mapDraw->restoreBorder();
-			playerLook[1][0] = '/';
-			break;
-		}
+		leftSwing();
 	} else if (direction == 2) { //d
-		attackCounter++;
-		switch (attackCounter) {
-		case 1:
-			playerLook[1][2] = INVISIBLE;
-			playerLook[0][0] = '>';
-			playerLook[0][1] = '_';
-			playerLook[0][2] = '>';
-			mapDraw->drawChar(xposition + 1, yposition + 2, '/', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 2, yposition + 3, '\\', PLAYER_SWING);
-			break;
-		case 2:
-			mapDraw->drawChar(xposition + 2, yposition + 1, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 4, yposition + 2, '\\', PLAYER_SWING);
-			break;
-		case 3:
-			playerLook[1][2] = '-';
-			mapDraw->drawChar(xposition + 2, yposition, '-', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 3, yposition, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 4, yposition, '-', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 5, yposition, '-', PLAYER_SWING);
-			break;
-		case 4:
-			playerLook[1][2] = INVISIBLE;
-			mapDraw->drawChar(xposition + 2, yposition - 1, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 4, yposition - 2, '/', PLAYER_SWING);
-			break;
-		case 5:
-			mapDraw->drawChar(xposition + 1, yposition - 2, '\\', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 2, yposition - 3, '/', PLAYER_SWING);
-			break;
-		case 6:
-			attackCounter = 0;
-			mapDraw->restoreBorder();
-			playerLook[1][2] = '\\';
-			break;
-		}
+		rightSwing();
 	} else if (direction == 3) { //w
-		attackCounter++;
-		switch (attackCounter) {
-		case 1:
-			playerLook[1][2] = INVISIBLE;
-			playerLook[0][0] = '>';
-			playerLook[0][1] = '_';
-			playerLook[0][2] = '<';
-			mapDraw->drawChar(xposition - 2, yposition - 1, '/', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 3, yposition - 2, '\\', PLAYER_SWING);
-			break;
-		case 2:
-			mapDraw->drawChar(xposition - 1, yposition - 2, '/', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 2, yposition - 3, '\\', PLAYER_SWING);
-			break;
-		case 3:
-//			mapDraw->drawChar(xposition, yposition - 4, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition, yposition - 3, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition, yposition - 2, 'T', PLAYER_SWING);
-			break;
-		case 4:
-			mapDraw->drawChar(xposition + 1, yposition - 2, '\\', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 2, yposition - 3, '/', PLAYER_SWING);
-			break;
-		case 5:
-			mapDraw->drawChar(xposition + 2, yposition - 1, '\\', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 3, yposition - 2, '/', PLAYER_SWING);
-			break;
-		case 6:
-			attackCounter = 0;
-			mapDraw->restoreBorder();
-			playerLook[1][2] = '\\';
-			break;
-		}
+		frontSwing();
 	} else if (direction == 4) { //s
-		attackCounter++;
-		mapDraw->restoreBorder();
-		switch (attackCounter) {
-		case 1:
-			playerLook[1][0] = '\\';
-			playerLook[0][0] = '>';
-			playerLook[0][1] = '_';
-			playerLook[0][2] = '<';
-			mapDraw->drawChar(xposition + 2, yposition + 1, '/', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 3, yposition + 2, '\\', PLAYER_SWING);
-			break;
-		case 2:
-			mapDraw->drawChar(xposition + 1, yposition + 2, '/', PLAYER_SWING);
-			mapDraw->drawChar(xposition + 2, yposition + 3, '\\', PLAYER_SWING);
-			break;
-		case 3:
-			playerLook[1][0] = '|';
-			mapDraw->drawChar(xposition, yposition + 2, '|', PLAYER_SWING);
-			mapDraw->drawChar(xposition, yposition + 3, 'T', PLAYER_SWING);
-//			mapDraw->drawChar(xposition, yposition + 4, '|', PLAYER_SWING);
-			break;
-		case 4:
-			playerLook[1][0] = '/';
-			mapDraw->drawChar(xposition - 1, yposition + 2, '\\', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 2, yposition + 3, '-', PLAYER_SWING);
-			break;
-		case 5:
-			mapDraw->drawChar(xposition - 2, yposition + 1, '\\', PLAYER_SWING);
-			mapDraw->drawChar(xposition - 3, yposition + 2, '/', PLAYER_SWING);
-			break;
-		case 6:
-			attackCounter = 0;
-			mapDraw->restoreBorder();
-			playerLook[1][0] = '/';
-			break;
-		}
+		backSwing();
 	} else if (direction == 5) { //aoe f1
-		attackCounter++;
-		switch (attackCounter) {
-		case 1:
-			mapDraw->drawChar(xposition - 1, yposition - 2, 'c', AOE);
-			mapDraw->drawChar(xposition, yposition - 2, 'c', AOE);
-			mapDraw->drawChar(xposition + 1, yposition - 2, 'c', AOE);
-			mapDraw->drawChar(xposition - 1, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition + 1, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition - 1, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition + 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition - 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition + 1, 'c', AOE);
-			break;
-		case 2:
-			mapDraw->drawChar(xposition - 1, yposition - 2, 'c', AOE);
-			mapDraw->drawChar(xposition, yposition - 2, 'c', AOE);
-			mapDraw->drawChar(xposition + 1, yposition - 2, 'c', AOE);
-			mapDraw->drawChar(xposition - 1, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition + 1, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition - 1, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition + 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition - 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition + 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 1, yposition - 3, 'c', AOE);
-			mapDraw->drawChar(xposition, yposition - 3, 'c', AOE);
-			mapDraw->drawChar(xposition + 1, yposition - 3, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition - 2, 'c', AOE);
-			mapDraw->drawChar(xposition - 1, yposition + 3, 'c', AOE);
-			mapDraw->drawChar(xposition, yposition + 3, 'c', AOE);
-			mapDraw->drawChar(xposition + 1, yposition + 3, 'c', AOE);
-			mapDraw->drawChar(xposition + 2, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition + 3, yposition - 1, 'c', AOE);
-			mapDraw->drawChar(xposition + 3, yposition, 'c', AOE);
-			mapDraw->drawChar(xposition + 3, yposition + 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition + 2, 'c', AOE);
-			mapDraw->drawChar(xposition - 3, yposition - 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 3, yposition, 'c', AOE);
-			mapDraw->drawChar(xposition - 3, yposition + 1, 'c', AOE);
-			mapDraw->drawChar(xposition - 2, yposition - 2, 'c', AOE);
-			break;
-		case 3:
-			//mapDraw->drawChar(xpossition, ypossition+2, '|');
-			break;
-		case 4:
-			//mapDraw->drawChar(xpossition-1, ypossition+2, '/');
-			break;
-		case 5:
-			//mapDraw->drawChar(xpossition-2, ypossition+1, '/');
-			break;
-		case 6:
-			attackCounter = 0;
-			break;
-		}
+		AOEAttack();
 	}
-
 	if (attackCounter == 0) {
-		attackDir = 8;
+		attackDir = 0;
+		mapDraw->restoreBorder();
+		this->standardLook();
+		chargePower = true;
 	}
 }
 
-void Player::loadCharacter(int x, int y, int attack, int def, int hp, int maxhp) {
+int Player::getPower() {
+	return power;
+}
+
+void Player::increasePower() {
+	if (chargePower) {
+		power = min(power + 1, maxPower);
+	}
+}
+
+int Player::getMaxPower() {
+	return maxPower;
+}
+
+void Player::AOEAttack() {
+	if (attackCounter == 0) {
+		if (power >= MINIMUM_AOE_COST) {
+			chargePower = false;	// avoid that the player overuses the special ability
+			playerLook[2][1] = AOE_CHAR;
+			aoeDamage = (int) attackStrength * (0.5 + 0.1 * power);
+			power = 0;
+			attackCounter = (attackCounter + 1) % AOE_RADIUS;
+		}
+	} else {
+		attackCounter = (attackCounter + 1) % AOE_RADIUS;
+	}
+	int topLeftX = xposition - PLAYER_WIDTH / 2;
+	int topLeftY = yposition - PLAYER_HEIGHT / 2;
+	int bottomRightX = xposition + PLAYER_WIDTH / 2;
+	int bottomRightY = yposition + PLAYER_HEIGHT / 2;
+	for (int i = 1; i <= attackCounter; i++) {
+		int x = topLeftX;
+		int y = topLeftY - i;
+		// draw north edge
+		for (int j = 0; j < PLAYER_WIDTH; j++) {
+			mapDraw->drawChar(x++, y, AOE_CHAR, AOE_CODE);
+		}
+		y++;
+		// draw north east diagonal
+		while (y < topLeftY) {
+			mapDraw->drawChar(x++, y++, AOE_CHAR, AOE_CODE);
+		}
+		// draw east edge
+		for (int j = 0; j < PLAYER_HEIGHT; j++) {
+			mapDraw->drawChar(x, y++, AOE_CHAR, AOE_CODE);
+		}
+		x--;
+		// draw south east diagonal
+		while (x > bottomRightX) {
+			mapDraw->drawChar(x--, y++, AOE_CHAR, AOE_CODE);
+		}
+		// draw south edge
+		for (int j = 0; j < PLAYER_WIDTH; j++) {
+			mapDraw->drawChar(x--, y, AOE_CHAR, AOE_CODE);
+		}
+		y--;
+		// draw south west diagonal
+		while (y > bottomRightY) {
+			mapDraw->drawChar(x--, y--, AOE_CHAR, AOE_CODE);
+		}
+		// draw west edge
+		for (int j = 0; j < PLAYER_HEIGHT; j++) {
+			mapDraw->drawChar(x, y--, AOE_CHAR, AOE_CODE);
+		}
+		x++;
+		// draw north west diagonal
+		while (x < topLeftX) {
+			mapDraw->drawChar(x++, y--, AOE_CHAR, AOE_CODE);
+		}
+	}
+}
+//		switch (attackCounter) {
+//		case 1:
+//			mapDraw->drawChar(xposition - 1, yposition - 2, 'c', AOE);
+//			mapDraw->drawChar(xposition, yposition - 2, 'c', AOE);
+//			mapDraw->drawChar(xposition + 1, yposition - 2, 'c', AOE);
+//			mapDraw->drawChar(xposition - 1, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition + 1, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition + 2, yposition - 1, 'c', AOE);
+//			mapDraw->drawChar(xposition + 2, yposition, 'c', AOE);
+//			mapDraw->drawChar(xposition + 2, yposition + 1, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition - 1, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition + 1, 'c', AOE);
+//			break;
+//		case 2:
+//			mapDraw->drawChar(xposition - 1, yposition - 2, 'c', AOE);
+//			mapDraw->drawChar(xposition, yposition - 2, 'c', AOE);
+//			mapDraw->drawChar(xposition + 1, yposition - 2, 'c', AOE);
+//			mapDraw->drawChar(xposition - 1, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition + 1, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition + 2, yposition - 1, 'c', AOE);
+//			mapDraw->drawChar(xposition + 2, yposition, 'c', AOE);
+//			mapDraw->drawChar(xposition + 2, yposition + 1, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition - 1, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition + 1, 'c', AOE);
+//
+//			mapDraw->drawChar(xposition - 1, yposition - 3, 'c', AOE);
+//			mapDraw->drawChar(xposition, yposition - 3, 'c', AOE);
+//			mapDraw->drawChar(xposition + 1, yposition - 3, 'c', AOE);
+//
+//			mapDraw->drawChar(xposition + 2, yposition - 2, 'c', AOE);
+//			mapDraw->drawChar(xposition - 1, yposition + 3, 'c', AOE);
+//			mapDraw->drawChar(xposition, yposition + 3, 'c', AOE);
+//			mapDraw->drawChar(xposition + 1, yposition + 3, 'c', AOE);
+//			mapDraw->drawChar(xposition + 2, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition + 3, yposition - 1, 'c', AOE);
+//			mapDraw->drawChar(xposition + 3, yposition, 'c', AOE);
+//			mapDraw->drawChar(xposition + 3, yposition + 1, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition + 2, 'c', AOE);
+//			mapDraw->drawChar(xposition - 3, yposition - 1, 'c', AOE);
+//			mapDraw->drawChar(xposition - 3, yposition, 'c', AOE);
+//			mapDraw->drawChar(xposition - 3, yposition + 1, 'c', AOE);
+//			mapDraw->drawChar(xposition - 2, yposition - 2, 'c', AOE);
+//			break;
+//		case 3:
+//			//mapDraw->drawChar(xpossition, ypossition+2, '|');
+//			break;
+//		case 4:
+//			//mapDraw->drawChar(xpossition-1, ypossition+2, '/');
+//			break;
+//		case 5:
+//			//mapDraw->drawChar(xpossition-2, ypossition+1, '/');
+//			break;
+//		case 6:
+//			attackCounter = 0;
+//			break;
+//		}
+//	}
+
+void Player::loadCharacter(int x, int y, int attack, int def, int hp,
+		int maxhp, int pow, int maxPow) {
 	this->xposition = x;
 	this->yposition = y;
 	this->attackStrength = attack;
 	this->defense = def;
 	this->HP = hp;
 	this->maxHP = maxhp;
+	this->power = pow;
+	this->maxPower = maxPow;
+}
+
+void Player::addMaxPower(int amount) {
+	maxPower = min(POWER_CAP, maxPower + amount);
 }
 
 void Player::standardLook() {
-	playerLook[0][0] = '^';
-	playerLook[0][1] = '_';
-	playerLook[0][2] = '^';
 	playerLook[1][0] = '/';
 	playerLook[1][1] = '|';
 	playerLook[1][2] = '\\';

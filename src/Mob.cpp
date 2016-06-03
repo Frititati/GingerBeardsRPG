@@ -29,6 +29,7 @@ Mob::Mob() {
 	attackLoot = 0;
 	healthLoot = 0;
 	healthAddLoot = 0;
+	maxPowerAddLoot = 0;
 	width = 0;
 	height = 0;
 }
@@ -171,6 +172,10 @@ void Mob::setStats(int difficulty, int monster, Player*& playerLoot) {
 		healthLoot = difficulty / 2;
 		healthAddLoot = playerLoot->getMaxHP() / 20;
 		attackLoot = 6;
+		int bonusPower = RTD(1, 100);
+		if (bonusPower < 16) {
+			maxPowerAddLoot = 1;
+		}
 		break;
 	}
 	int bonus = RTD(1, 100);
@@ -178,8 +183,13 @@ void Mob::setStats(int difficulty, int monster, Player*& playerLoot) {
 		attackLoot = attackLoot + 5;
 		defenceLoot = defenceLoot + 5;
 		healthAddLoot = healthAddLoot + 25;
+		maxPowerAddLoot += 1;
 		healthLoot = 1000;
 	}
+}
+
+int Mob::getPowerAddLoot() {
+	return maxPowerAddLoot;
 }
 //void Mob::setStats(Player*& difficulty, int monster){
 //	switch(monster){
@@ -357,10 +367,11 @@ void Mob::detectDamage(Map*& mapChecker) {
 				char damageIndicator = mapChecker->getBorderCell(j, i);
 				if ((damageIndicator != '0') && ((speedCount % 6) == 0)) { //we do this to test if he is getting hit and to make sure he doesn't get hit 100 times
 					switch (damageIndicator) {
-					case '6':
+					case '6': // sword swing
 						hp -= playerposition->getAttackStrength();
 						return;
-					case '7':
+					case '7': // aoe
+						hp -= playerposition->getAOEDamage();
 						return;
 					case '8':
 						return;

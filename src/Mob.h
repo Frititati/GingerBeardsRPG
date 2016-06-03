@@ -21,6 +21,7 @@ public:
 	void mobMovement(Map*&, Player*&);
 	void detectDamage(Map*&);
 	int getHealth();
+	int getPowerAddLoot();
 	int RTD(int , int );
 	void setLook(int);
 	void setStats(int, int, Player*&);
@@ -48,6 +49,7 @@ private:
 	int attackLoot;
 	int healthLoot;
 	int healthAddLoot;
+	int maxPowerAddLoot;
 	char** mobLook;
 };
 

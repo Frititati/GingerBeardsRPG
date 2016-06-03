@@ -155,7 +155,8 @@ void GingerBeards::gameLoop() {
 		cout << "GingerBeards::gameLoop2" << endl;
 		mapConstructor->drawStatsBar(firstPlayer->getMaxHP(),
 				firstPlayer->getHP(), firstPlayer->getAttackStrength(),
-				firstPlayer->getDefense());
+				firstPlayer->getDefense(), firstPlayer->getPower(),
+				firstPlayer->getMaxPower());
 		mapConstructor->getStrInChar(textToBePrinted);
 		tempgingerbeards->draw(window);
 		if (boss->getHealth() < 1) {
@@ -265,6 +266,8 @@ bool GingerBeards::saveGame() {
 	myfile << firstPlayer->getDefense() << endl;
 	myfile << firstPlayer->getHP() << endl;
 	myfile << firstPlayer->getMaxHP() << endl;
+	myfile << firstPlayer->getPower() << endl;
+	myfile << firstPlayer->getMaxPower() << endl;
 
 	menu->setMessage("Save successful ;)", 18);
 	myfile.close();
@@ -293,7 +296,7 @@ void GingerBeards::intro() {
 
 bool GingerBeards::loadGame() {
 	ifstream myfile;
-	int x, y, attack, defense, HP, maxHP;
+	int x, y, attack, defense, HP, maxHP, power, maxPower;
 	myfile.open("save.gb");
 	if (!myfile.is_open())
 		return false;
@@ -304,7 +307,10 @@ bool GingerBeards::loadGame() {
 	myfile >> defense;
 	myfile >> HP;
 	myfile >> maxHP;
-	firstPlayer->loadCharacter(x, y, attack, defense, HP, maxHP);
+	myfile >> power;
+	myfile >> maxPower;
+	firstPlayer->loadCharacter(x, y, attack, defense, HP, maxHP, power,
+			maxPower);
 	menu->setMessage("Loading complete :D", 19);
 	myfile.close();
 	return true;
