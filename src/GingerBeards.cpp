@@ -115,6 +115,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 				Sleep(MENU_DELAY_MS);
 			}
 		}
+		Sleep(MENU_DELAY_MS);
 	}
 
 	return Msg.wParam;
@@ -126,7 +127,7 @@ void GingerBeards::menuLoop() {
 		menu->setMessage("Nice to see you again <3", 24);
 	} else {
 		menu->notInGame();
-		menu->setMessage("HI! Welcome to GingerBeards RPG *.*", 35);
+		menu->setMessage("", 0);
 	}
 	while (!stateShift) {
 		tempgingerbeards->peekMessage();
@@ -223,16 +224,8 @@ void GingerBeards::checkForMenuInput() {
 		switch (menu->getSelectedItem()) {
 		case 0:	// new game
 			setupGame();
-			cout << "GingerBeards::checkForMenuInput1" << endl;
-			menu->instructionsScreen(textToBePrinted);
 			gameState = IN_GAME;
-			cout << "GingerBeards::checkForMenuInput2" << endl;
-			while (!stateShift && !GetAsyncKeyState(0x43)) {
-				peekMessage();
-				tempgingerbeards->draw(window);
-				Sleep(MENU_DELAY_MS);
-			}
-			cout << "GingerBeards::checkForMenuInput3" << endl;
+			intro();
 			stateShift = true;
 			break;
 		case 1:	// continue
@@ -265,29 +258,53 @@ bool GingerBeards::saveGame() {
 	ofstream myfile;
 	myfile.open("save.gb");
 	firstPlayer->playerPosition(&x, &y);
-	int HP = firstPlayer->getHP();
 //	myfile.write(reinterpret_cast<const char *>(&x), sizeof(x));
 	myfile << x << endl;
 	myfile << y << endl;
-	myfile << HP << endl;
+	myfile << firstPlayer->getAttackStrength() << endl;
+	myfile << firstPlayer->getDefense() << endl;
+	myfile << firstPlayer->getHP() << endl;
+	myfile << firstPlayer->getMaxHP() << endl;
+
 	menu->setMessage("Save successful ;)", 18);
 	myfile.close();
 	return true;
 }
 //Save successful ;)
 
+void GingerBeards::intro() {
+	char pages[][25] = { "instructions_page1.txt", "instructions_page2.txt",
+			"instructions_page3.txt" };
+	cout << "GingerBeards::checkForMenuInput1" << endl;
+	for (int i = 0; i < 3; i++) {
+		menu->readPage(textToBePrinted, pages[i]);
+		cout << "GingerBeards::checkForMenuInput2" << endl;
+		while (!GetAsyncKeyState(0x43)) {
+			if (stateShift)
+				return;
+			peekMessage();
+			tempgingerbeards->draw(window);
+			Sleep(MENU_DELAY_MS);
+		}
+		Sleep(MENU_DELAY_MS);
+	}
+	cout << "GingerBeards::checkForMenuInput3" << endl;
+}
+
 bool GingerBeards::loadGame() {
 	ifstream myfile;
-	int x, y, HP;
+	int x, y, attack, defense, HP, maxHP;
 	myfile.open("save.gb");
 	if (!myfile.is_open())
 		return false;
 	setupGame();
 	myfile >> x;
 	myfile >> y;
+	myfile >> attack;
+	myfile >> defense;
 	myfile >> HP;
-	firstPlayer->teleport(x, y);
-	firstPlayer->setHP(HP);
+	myfile >> maxHP;
+	firstPlayer->loadCharacter(x, y, attack, defense, HP, maxHP);
 	menu->setMessage("Loading complete :D", 19);
 	myfile.close();
 	return true;
@@ -305,7 +322,6 @@ void GingerBeards::checkForGameInput() {
 	} else if (GetAsyncKeyState( VK_LEFT)) {
 		firstPlayer->playerMovement(1, refMap);
 	}
-	// attack
 	if (GetAsyncKeyState(0x41)) {
 		firstPlayer->setAttack(1); // a
 	} else if (GetAsyncKeyState(0x53)) {

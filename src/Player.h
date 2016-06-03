@@ -26,6 +26,8 @@ public:
 	bool damage(int);
 	void attack(int);
 	void setMaxHP(int);
+	void standardLook();
+	void loadCharacter(int, int, int, int, int, int);
 	Player();
 private:
 	int xposition;

@@ -92,6 +92,7 @@ void MobControl::smartSpawn(Player*& playerinfo, Map*& mapChecker){
 	mobLook[0][0] = 'M';
 	mobLook[0][1] = 'M';
 	mobLook[0][2] = 'M';
+	cout << "MobControl::smartSpawn1" << endl;
 	if(mobArrayLenth < 28 && mapChecker->testBorder(idealx, idealy, 3, 1, mobLook)){
 		mobArray[mobArrayLenth].creatingMob(idealx, idealy, playerinfo);
 		mobArrayLenth++;

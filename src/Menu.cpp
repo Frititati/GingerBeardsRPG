@@ -103,26 +103,28 @@ void Menu::getStrInChar(char* strInChar) {
 void Menu::setMessage(char* message, int length) {
 	this->message = message;
 	messageLength = length;
-	msgCountDown = MSG_COUNTDOWN_FRAMES;
+	if (length > 0) {
+		msgCountDown = MSG_COUNTDOWN_FRAMES;
+	}
 }
 
 int Menu::getSelectedItem() {
 	return codes[cursor];
 }
 
-void Menu::instructionsScreen(char* strInChar) {
+void Menu::readPage(char* strInChar, const char* page) {
 	string line;
-	ifstream myfile("instructions.txt");
+	ifstream myfile(page);
 	if (myfile.is_open()) {
 		int i;
 		const int INSTRUCTIONS_LIMIT = 100;
 		options = new char *[INSTRUCTIONS_LIMIT];
-		optionsLength = new int [INSTRUCTIONS_LIMIT];
+		optionsLength = new int[INSTRUCTIONS_LIMIT];
 		cout << "Menu::instructionsScreen1" << endl;
 		for (i = 0; getline(myfile, line); i++) {
 			cout << i << endl;
 			optionsLength[i] = line.length();
-			options[i] = new char [line.length()];
+			options[i] = new char[line.length()];
 			for (unsigned int j = 0; j < line.length(); j++) {
 				cout << j << endl;
 				options[i][j] = line.at(j);
@@ -130,14 +132,15 @@ void Menu::instructionsScreen(char* strInChar) {
 		}
 		myfile.close();
 		numberOfOptions = i;
-		clearScreen();
-		cout << "Menu::instructionsScreen2" << endl;
-		drawOptions();
-		cout << "Menu::instructionsScreen3" << endl;
-		getStrInChar(strInChar);
 	} else {
 		cout << "Unable to open file" << endl;
 	}
+	clearScreen();
+	cout << "Menu::instructionsScreen2" << endl;
+	drawOptions();
+	cout << "Menu::instructionsScreen3" << endl;
+	getStrInChar(strInChar);
+
 }
 
 void Menu::endScreen(char* strInChar) {

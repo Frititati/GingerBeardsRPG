@@ -16,6 +16,9 @@ const int MAP_HEIGHT = 181, MAP_WIDTH= 400;
 const int DIGITS = 5;
 const int HEALTHBAR_WIDTH = 41;
 
+const char PLAYER_SWING = '6';
+const char AOE = '7';
+
 class Map{
 public:
 	void mapInCharFunc();
@@ -27,6 +30,7 @@ public:
 	void borderInstantion();
 	void drawCharacter(int, int, int, int, char**);
 	void drawChar(int, int, char);
+	void drawChar(int, int, char, char);
 	void drawStatsBar(int, int, int, int);
 	void drawMenu();
 	void refreshEditLayer();
@@ -34,6 +38,7 @@ public:
 //	void getBorders(char**);
 	void editBorder(int, int, char);
 	void restoreBorder();
+	void restoreBorderCell(int x, int y);
 	char getBorderCell(int, int);
 private:
 	char* toChar(int, int*);

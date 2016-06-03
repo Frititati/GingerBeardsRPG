@@ -9,7 +9,7 @@
 #define SRC_MENU_H_
 
 const int MESSAGE_Y = (VIEWPORT_HEIGHT / 4) * 3;
-const int MENU_DELAY_MS = 128;
+const int MENU_DELAY_MS = 64;
 const int MSG_COUNTDOWN_SECONDS = 5;
 const int MSG_COUNTDOWN_FRAMES = MSG_COUNTDOWN_SECONDS * (1000 / MENU_DELAY_MS);
 
@@ -25,7 +25,7 @@ public:
 	void inGame();
 	void notInGame();
 	void endScreen(char*);
-	void instructionsScreen(char*);
+	void readPage(char*, const char*);
 private:
 	void clearScreen();
 	void drawOptions();

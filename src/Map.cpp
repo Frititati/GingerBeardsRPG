@@ -208,6 +208,11 @@ void Map::drawChar(int x, int y, char draw) {
 	mapInCharEditable[viewportRelativeY][viewportRelativeX] = draw;
 }
 
+void Map::drawChar(int x, int y, char draw, char borderCode) {
+	this->drawChar(x, y, draw);
+	this->editBorder(x, y, borderCode);
+}
+
 void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i,
 		char** drawPoints) {
 	int rightmostChar;
@@ -215,7 +220,7 @@ void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i,
 		for (int j = 0; leftmostChar + j < VIEWPORT_WIDTH && j < drawWidth;
 				j++) {
 			char charToBeDrawn = drawPoints[i][j];
-			if (charToBeDrawn != EMPTY) {
+			if (charToBeDrawn != EMPTY && charToBeDrawn != INVISIBLE) {
 				mapInCharEditable[y][leftmostChar + j] = charToBeDrawn;
 			}
 		}
@@ -223,7 +228,7 @@ void Map::drawCharacterXAxis(int leftmostChar, int y, int drawWidth, int i,
 			< VIEWPORT_WIDTH) {
 		for (int j = 0; rightmostChar - j >= 0 && j < drawWidth; j++) {
 			char charToBeDrawn = drawPoints[i][drawWidth - j - 1];
-			if (charToBeDrawn != EMPTY) {
+			if (charToBeDrawn != EMPTY && charToBeDrawn != INVISIBLE) {
 				mapInCharEditable[y][rightmostChar - j] = charToBeDrawn;
 			}
 		}

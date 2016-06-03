@@ -1,0 +1,30 @@
+~ How to play ~
+
+Use the arrow keys to move Filippo around the world
+
+w
+
+ | 
+ T
+>_<
+/| 
+/ \
+
+      <_<               >_>       
+a  --|-|\               /|-|--   d
+      / \               / \       
+
+s
+>_<
+||\
+/ \
+ T 
+ | 
+
+Your health will regenerate if you don't get hit for a while
+
+Slaining monsters will sometime raise your attack, defense or maximum health
+
+q - Special attack
+
+Press 'c' to continue

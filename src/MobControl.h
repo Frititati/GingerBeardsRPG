@@ -20,7 +20,7 @@ public:
 	void smartDespawn();
 private:
 	int mobArrayLenth;
-	int counter;
+	unsigned int counter;
 };
 
 #endif /* SRC_MOBCONTROL_H_ */

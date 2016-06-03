@@ -1,0 +1,14 @@
+~ A Ginger Tale ~
+
+Monsters are attacking from everywhere!
+
+Our hero Filippo is encharged to slain them all
+
+    /             
+>_>\               
+/|       <- Filippo
+/ \                
+
+Press 'c' to continue
+
+
