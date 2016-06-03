@@ -9,10 +9,18 @@
 #define MAP_H_
 #include <string.h>
 
-const int XINCREASE = 45, YINCREASE = 15;
+const char OUT_OF_MAP_CHAR = '-';
+
+const int XINCREASE = 72, YINCREASE = 18;
 const int VIEWPORT_WIDTH = 2 * XINCREASE + 1;
 const int VIEWPORT_HEIGHT = 2 * YINCREASE + 1;
-const int MAP_ROWS = 181, MAP_COLUMNS= 400;
+const int MAP_HEIGHT = 181, MAP_WIDTH= 400;
+const int DIGITS = 5;
+const int HEALTHBAR_WIDTH = 41;
+const int POWER_CAP = 15;
+
+const char PLAYER_SWING = '6';
+const char AOE_CODE = '7';
 
 class Map{
 public:
@@ -24,10 +32,22 @@ public:
 	void mapInstantiation();
 	void borderInstantion();
 	void drawCharacter(int, int, int, int, char**);
+	void drawChar(int, int, char);
+	void drawChar(int, int, char, char);
+	void drawStatsBar(int, int, int, int, int, int);
+	void drawMenu();
+	int drawPowerBar(int, int, char*, int);
 	void refreshEditLayer();
 	void getStrInChar(char*);
+//	void getBorders(char**);
+	void editBorder(int, int, char);
+	void restoreBorder();
+	void restoreBorderCell(int x, int y);
+	char getBorderCell(int, int);
 private:
+	char* toChar(int, int*);
 	void drawCharacterXAxis(int, int, int, int, char**);
+	int drawStat(int j, int stat, char* label, int labelSize);
 };
 
 

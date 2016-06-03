@@ -1,0 +1,24 @@
+~ How to play ~
+
+Use the arrow keys to move Filippo around the world
+
+w
+
+ | 
+ T 
+>_<
+/| 
+/ \
+
+      <_<               >_>       
+a  --|-|\               /|-|--   d
+      / \               / \       
+
+s
+>_<
+||\
+/ \
+ T 
+ | 
+
+Press 'c' to continue
